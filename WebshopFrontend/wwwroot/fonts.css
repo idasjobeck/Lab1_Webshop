@@ -1,0 +1,176 @@
+/* Font classes - for fonts loaded from Google Fonts */
+/* Barlow */
+/* https://fonts.google.com/specimen/Barlow?query=Barlow */
+.barlow-regular {
+    font-family: "Barlow", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.barlow-medium {
+    font-family: "Barlow", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.barlow-semibold {
+    font-family: "Barlow", serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.barlow-bold {
+    font-family: "Barlow", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.barlow-regular-italic {
+    font-family: "Barlow", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.barlow-medium-italic {
+    font-family: "Barlow", serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.barlow-semibold-italic {
+    font-family: "Barlow", serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.barlow-bold-italic {
+    font-family: "Barlow", serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Barlow Semi Condensed */
+/* https://fonts.google.com/specimen/Barlow+Semi+Condensed */
+
+.barlow-semi-condensed-light {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.barlow-semi-condensed-regular {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.barlow-semi-condensed-medium {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.barlow-semi-condensed-semibold {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.barlow-semi-condensed-bold {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.barlow-semi-condensed-light-italic {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.barlow-semi-condensed-regular-italic {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.barlow-semi-condensed-medium-italic {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.barlow-semi-condensed-semibold-italic {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.barlow-semi-condensed-bold-italic {
+    font-family: "Barlow Semi Condensed", serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* Barlow Condensed */
+/* https://fonts.google.com/specimen/Barlow+Condensed */
+
+.barlow-condensed-light {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.barlow-condensed-regular {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.barlow-condensed-medium {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.barlow-condensed-semibold {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.barlow-condensed-bold {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.barlow-condensed-light-italic {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.barlow-condensed-regular-italic {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.barlow-condensed-medium-italic {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.barlow-condensed-semibold-italic {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.barlow-condensed-bold-italic {
+    font-family: "Barlow Condensed", serif;
+    font-weight: 700;
+    font-style: italic;
+}
