@@ -1,0 +1,38 @@
+﻿<div>
+    <a href="@FacebookUrl" target="_blank"><i class="bi bi-facebook @(DisplayIcon(FacebookUrl))"></i></a>
+    <a href="@InstagramUrl" target="_blank"><i class="bi bi-instagram @(DisplayIcon(InstagramUrl))"></i></a>
+    <a href="@ThreadsUrl" target="_blank"><i class="bi bi-threads-fill @(DisplayIcon(ThreadsUrl))"></i></a>
+    <a href="@TwitterUrl" target="_blank"><i class="bi bi-twitter-x @(DisplayIcon(TwitterUrl))"></i></a>
+    <a href="@MastodonUrl" target="_blank"><i class="bi bi-mastodon @(DisplayIcon(MastodonUrl))"></i></a>
+    <a href="@LinkedinUrl" target="_blank"><i class="bi bi-linkedin @(DisplayIcon(LinkedinUrl))"></i></a>
+    <a href="@GithubUrl" target="_blank"><i class="bi bi-github @(DisplayIcon(GithubUrl))"></i></a>
+</div>
+
+@code {
+    [Parameter]
+    public string FacebookUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string InstagramUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ThreadsUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string TwitterUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string MastodonUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string LinkedinUrl { get; set; } = string.Empty;
+
+    [Parameter]
+    public string GithubUrl { get; set; } = string.Empty;
+
+
+    public string DisplayIcon(string url)
+    {
+        return string.IsNullOrEmpty(url) ? "hidden" : "";
+    }
+}
