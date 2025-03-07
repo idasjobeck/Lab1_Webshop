@@ -1,0 +1,27 @@
+﻿<div class="header @($"header-content-{HeadingAlignment.Horizontal}") @($"header-content-{HeadingAlignment.Vertical}")">
+    <h1><a href="@HeadingUrl" target="_blank">@HeadingText</a></h1>
+</div>
+
+@code {
+    public enum HorizontalAlignment
+    {
+        left,
+        center,
+        right
+    }
+    public enum VerticalAlignment
+    {
+        top,
+        middle,
+        bottom
+    }
+
+    [Parameter]
+    public string HeadingText { get; set; }
+
+    [Parameter]
+    public string HeadingUrl { get; set; } = "/";
+
+    [Parameter]
+    public (HorizontalAlignment Horizontal, VerticalAlignment Vertical) HeadingAlignment { get; set; } = (HorizontalAlignment.center, VerticalAlignment.middle);
+}

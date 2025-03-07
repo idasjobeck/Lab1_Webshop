@@ -58,6 +58,36 @@ footer {
     padding: 20px;
 }
 
+.header div {
+    display: flex;
+    flex-direction: column;
+    padding: 0 30px;
+}
+
+.header-content-top {
+    justify-content: start;
+}
+
+.header-content-middle {
+    justify-content: center;
+}
+
+.header-content-bottom {
+    justify-content: end;
+}
+
+.header-content-left {
+    align-items: start;
+}
+
+.header-content-center {
+    align-items: center;
+}
+
+.header-content-right {
+    align-items: end;
+}
+
 .navbar-nav {
     display: flex;
     flex-direction: column;

@@ -2,9 +2,7 @@
 
 <div class="page barlow-regular">
     <header class="header">
-        <div>
-            <h1><a href="/">Company name</a></h1>
-        </div>
+        <Header HeadingText="Company Name" HeadingAlignment="(Header.HorizontalAlignment.left, Header.VerticalAlignment.middle)"/>
     </header>
     <main>
         <NavMenu StaticMenuItem="@(("Home", ""))" OtherMenuItems="@(new List<(string Text, string Url)> {("Products", "products"), ("About Us", "about"), ("Cart", "cart")})" />
