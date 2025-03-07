@@ -1,0 +1,54 @@
+﻿<footer>
+    <div class="row @($"footer-content-{HorizontalAlignment}")">
+        <span>@SiteOwner &copy; @CopyrightPeriod</span>
+        <div class="@(DisplaySocialMediaIcons ? string.Empty : "hidden")">
+            @if (DisplaySocialMediaIcons)
+            {
+                <SocialMediaIcons FacebookUrl="@FacebookUrl" InstagramUrl="@InstagramUrl" ThreadsUrl="@ThreadsUrl" TwitterUrl="@TwitterUrl" MastodonUrl="@MastodonUrl" LinkedinUrl="@LinkedinUrl" GithubUrl="@GithubUrl"/>
+            }
+        </div>
+    </div>
+</footer>
+
+@code {
+    public enum FooterHorizontalAlignment
+    {
+        left,
+        center,
+        right,
+        split
+    }
+
+    [Parameter]
+    public string? SiteOwner { get; set; }
+
+    [Parameter]
+    public string CopyrightPeriod { get; set; } = DateTime.Now.Year.ToString();
+
+    [Parameter]
+    public FooterHorizontalAlignment HorizontalAlignment { get; set; } = FooterHorizontalAlignment.left;
+
+    [Parameter]
+    public bool DisplaySocialMediaIcons { get; set; } = false;
+
+    [Parameter]
+    public string? FacebookUrl { get; set; }
+
+    [Parameter]
+    public string? InstagramUrl { get; set; }
+
+    [Parameter]
+    public string? ThreadsUrl { get; set; }
+
+    [Parameter]
+    public string? TwitterUrl { get; set; }
+
+    [Parameter]
+    public string? MastodonUrl { get; set; }
+
+    [Parameter]
+    public string? LinkedinUrl { get; set; }
+
+    [Parameter]
+    public string? GithubUrl { get; set; }
+}

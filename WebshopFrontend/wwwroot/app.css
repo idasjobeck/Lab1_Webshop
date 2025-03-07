@@ -154,6 +154,40 @@ li.nav-item:hover {
     padding: 20px;
 }
 
+footer div.row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+footer span {
+    margin-right: 15px;
+}
+
+footer i {
+    margin-right: 2px;
+}
+
+footer a {
+    color: #333;
+}
+
+.footer-content-left {
+    justify-content: start;
+}
+
+.footer-content-center {
+    justify-content: center;
+}
+
+.footer-content-right {
+    justify-content: end;
+}
+
+.footer-content-split {
+    justify-content: space-between;
+}
+
 .hidden {
     display: none;
 }
@@ -173,9 +207,9 @@ li.nav-item:hover {
         margin-right: 25px;
     }
 
-    footer div.row {
+/*    footer div.row {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-    }
+    }*/
 }
