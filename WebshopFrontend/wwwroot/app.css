@@ -58,7 +58,7 @@ footer {
     padding: 20px;
 }
 
-ul.navbar-nav {
+.navbar-nav {
     display: flex;
     flex-direction: column;
     list-style-type: none;
@@ -69,14 +69,14 @@ ul.navbar-nav {
     color: whitesmoke;
 }
 
-li.nav-item {
+.nav-item {
     display: flex;
     /* flex-direction: row; */
     /* float: left; */
     /* padding: 10px; */
 }
 
-li.nav-item-static {
+.nav-item-static {
     display: flex;
     /* float: right; */
     /* padding: 10px; */
@@ -92,6 +92,13 @@ a.nav-link {
 
 li.nav-item:hover {
     background-color: #555;
+}
+
+.nav-item a.active {
+    /*    background-color: rgba(255, 255, 255, 0.37);*/
+    font-weight: bold;
+    /*    color: greenyellow;*/
+    color: lightgray;
 }
 
 .page {

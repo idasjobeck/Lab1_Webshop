@@ -2,17 +2,22 @@
     <nav class="navbar">
         <ul class="navbar-nav">
             <li class="nav-item nav-item-static">
-                <a href="" class="nav-link">Home</a>
+                <NavLink class="nav-link" href="@StaticMenuItem.Url">@StaticMenuItem.Text</NavLink>
             </li>
-            <li class="nav-item">
-                <a href="products" class="nav-link">Products</a>
-            </li>
-            <li class="nav-item">
-                <a href="about" class="nav-link">About Us</a>
-            </li>
-            <li class="nav-item">
-                <a href="cart" class="nav-link">Cart</a>
-            </li>
+            @foreach (var otherMenuItem in OtherMenuItems)
+            {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="@otherMenuItem.Url">@otherMenuItem.Text</NavLink>
+                </li>
+            }
         </ul>
     </nav>
 </div>
+
+@code {
+    [Parameter]
+    public (string Text, string Url) StaticMenuItem { get; set; } = ("Home", "");
+
+    [Parameter]
+    public List<(string Text, string Url)> OtherMenuItems { get; set; } = new();
+}

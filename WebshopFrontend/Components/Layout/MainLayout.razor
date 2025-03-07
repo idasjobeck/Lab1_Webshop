@@ -7,7 +7,7 @@
         </div>
     </header>
     <main>
-        <NavMenu/>
+        <NavMenu StaticMenuItem="@(("Home", ""))" OtherMenuItems="@(new List<(string Text, string Url)> {("Products", "products"), ("About Us", "about"), ("Cart", "cart")})" />
         <div class="row-main-layout">
             <div class="sidebar">
                 Sidebar content, if I'm going to use it.
