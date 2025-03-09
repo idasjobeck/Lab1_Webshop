@@ -1,0 +1,37 @@
+﻿@rendermode InteractiveServer
+
+<div class="product-preview">
+    <div class="product-preview-image">
+        <img src="@ImgSrc" alt="Image for @ProductName" />
+    </div>
+    <div class="product-preview-row barlow-semibold">
+        <a href="">@ProductName</a>
+    </div>
+    <div class="product-preview-row barlow-semibold product-preview-price">
+        @Price @Currency
+    </div>
+    <div class="product-preview-row">
+        <span>In stock: @Quantity</span>
+        <button>Add to cart</button> @* needs further functionality on the button *@
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    [Parameter]
+    public string ProductName { get; set; }
+
+    [Parameter]
+    public double Price { get; set; }
+
+    [Parameter]
+    public string Currency { get; set; } = "SEK";
+
+    [Parameter]
+    public int Quantity { get; set; }
+
+    [Parameter]
+    public string ImgSrc { get; set; } = "/resources/no-image-available.jpg"; // default image as placeholder
+}
