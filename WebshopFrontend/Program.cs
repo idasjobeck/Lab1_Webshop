@@ -12,6 +12,8 @@ public class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
+        builder.Services.AddHttpClient("WebshopBackendAPI", client => client.BaseAddress = new Uri("https://localhost:7124"));
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
