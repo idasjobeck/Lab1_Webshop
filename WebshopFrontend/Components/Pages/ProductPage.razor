@@ -1,4 +1,5 @@
 ﻿@page "/products/{id:int}"
+@rendermode InteractiveServer
 @using System.Data.SqlTypes
 @using WebshopCore
 @using System.Text.Json
@@ -28,7 +29,8 @@
             </div>
             <div class="product-preview-row">
                 <span>In stock: @Quantity</span>
-                <button>Add to cart</button> @* needs further functionality on the button *@
+                @* <button>Add to cart</button> *@ @* needs further functionality on the button *@
+                <AddToCart Product="@ProductDTO" />
             </div>
         </div>
     </div>

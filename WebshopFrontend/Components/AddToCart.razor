@@ -3,7 +3,7 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<button @onclick="() => AddToCartAsync(Product)">AddToCart</button>
+<button @onclick="() => AddToCartAsync(Product)">Add to cart</button>
 
 @code {
     private List<ProductDTO> cart = new();
