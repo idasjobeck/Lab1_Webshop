@@ -141,6 +141,12 @@ li.nav-item:hover {
     flex-wrap: wrap;
 }
 
+.row-products {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -162,7 +168,7 @@ li.nav-item:hover {
     padding: 5px;
     border: 1px solid #333;
     background-color: whitesmoke;
-    width: 350px;
+    width: 300px;
 }
 
 .product-preview a {
@@ -183,6 +189,17 @@ li.nav-item:hover {
 /*    margin: 5px 0;*/
     flex-wrap: wrap;
 }
+
+.product-preview-image {
+    max-height: 350px;
+}
+
+    .product-preview-image img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        margin-bottom: 5px;
+    }
 
 .product-preview-price {
     font-size: 1.4em;

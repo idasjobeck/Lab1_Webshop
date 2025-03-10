@@ -10,7 +10,7 @@ namespace WebshopBackend
             var app = builder.Build();
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //builder.Services.AddSwaggerGen();
 
             //app.MapGet("/", () => "Hello World!");
             app.MapGet("/products", () => DTOExtensions.GetProducts());
@@ -18,8 +18,8 @@ namespace WebshopBackend
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                //app.UseSwagger();
+                //app.UseSwaggerUI();
             }
 
             app.Run();
