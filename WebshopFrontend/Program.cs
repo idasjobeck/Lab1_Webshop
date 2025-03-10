@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using WebshopFrontend.Components;
 
 namespace WebshopFrontend;
@@ -13,6 +14,8 @@ public class Program
             .AddInteractiveServerComponents();
 
         builder.Services.AddHttpClient("WebshopBackendAPI", client => client.BaseAddress = new Uri("https://localhost:7124"));
+
+        builder.Services.AddBlazoredLocalStorage();
 
         var app = builder.Build();
 

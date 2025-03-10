@@ -1,0 +1,31 @@
+﻿@using WebshopCore
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<button @onclick="() => AddToCartAsync(Product)">AddToCart</button>
+
+@code {
+    private List<ProductDTO> cart = new();
+
+    [Parameter]
+    public ProductDTO Product { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        cart = await GetItemsFromCartAsync();
+        StateHasChanged();
+    }
+
+    private async Task<List<ProductDTO>> GetItemsFromCartAsync()
+    {
+        return await LocalStorage.GetItemAsync<List<ProductDTO>>("cart") ?? new List<ProductDTO>();
+    }
+
+    private async Task AddToCartAsync(ProductDTO product)
+    {
+        cart = await GetItemsFromCartAsync();
+        cart.Add(product);
+        await LocalStorage.SetItemAsync("cart", cart);
+    }
+}
