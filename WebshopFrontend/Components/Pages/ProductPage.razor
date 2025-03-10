@@ -1,0 +1,70 @@
+﻿@page "/products/{id:int}"
+@using System.Data.SqlTypes
+@using WebshopCore
+@using System.Text.Json
+@inject IHttpClientFactory HttpClientFactory
+
+@* <h3>ProductPage</h3> *@
+@if (ProductDTO != null)
+{
+    <div class="product-page-row">
+        <div class="product-page-image">
+            @* product image *@
+            <img src="@ProductDTO.ImageUrl" alt="Image for @ProductDTO.ProductName"/>
+        </div>
+        <div class="product-page-info">
+            @* product info *@
+            <h1>@ProductDTO.ProductName</h1>
+            <p><span class="barlow-semibold">Title: </span>@ProductDTO.Title</p>
+            <p><span class="barlow-semibold">Author: </span>@ProductDTO.Author</p>
+            <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@ProductDTO.Series</p>
+            <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@ProductDTO.NumberInSeries</p>
+            <p><span class="barlow-semibold">Description: </span>@ProductDTO.Description</p>
+            <p><span class="barlow-semibold">ISBN: </span>@ProductDTO.ISBN</p>
+            <p><span class="barlow-semibold">Publisher: </span>@ProductDTO.Publisher</p>
+            <p><span class="barlow-semibold">Published: </span>@ProductDTO.PublishedYear</p>
+            <div class="product-preview-row barlow-semibold product-preview-price">
+                @ProductDTO.Price @Currency
+            </div>
+            <div class="product-preview-row">
+                <span>In stock: @Quantity</span>
+                <button>Add to cart</button> @* needs further functionality on the button *@
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p><em>Product not found...</em></p>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public string Currency { get; set; } = "SEK";
+
+    [Parameter] 
+    public int Quantity { get; set; } = 1;
+
+    public ProductDTO ProductDTO { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchDataById();
+        StateHasChanged();
+    }
+
+    private async Task FetchDataById()
+    {
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var data = await client.GetStringAsync($"/products/{Id}");
+        ProductDTO = JsonSerializer.Deserialize<ProductDTO>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
+
+    private bool InSeries()
+    {
+        return !string.IsNullOrEmpty(ProductDTO.Series);
+    }
+}
