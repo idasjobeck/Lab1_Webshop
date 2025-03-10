@@ -6,11 +6,10 @@
 <h3>Products</h3>
 @if (ProductDTOs != null)
 {
-    //loop through the list of products and display them using ProductPreview component
     <div class="row-products">
         @foreach (var product in ProductDTOs)
         {
-            <ProductPreview ProductId="@product.Id" ProductName="@product.ProductName" Price="@product.Price" Quantity="1" ImgSrc="@product.ImageUrl" />
+            <ProductPreview ProductDTO="@product" />
         }
     </div>
 }
@@ -34,23 +33,4 @@ else
         var data = await client.GetStringAsync("/products");
         ProductDTOs = JsonSerializer.Deserialize<List<ProductDTO>>(data, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
     }
-
-
-    // [Parameter]
-    // public int ProductId { get; set; }
-
-    // [Parameter]
-    // public string ProductName { get; set; }
-
-    // [Parameter]
-    // public double Price { get; set; }
-
-    // [Parameter]
-    // public string Currency { get; set; } = "SEK";
-
-    // [Parameter]
-    // public int Quantity { get; set; }
-
-    // [Parameter]
-    // public string ImgSrc { get; set; } = "/resources/no-image-available.jpg"; default image as placeholder
 }

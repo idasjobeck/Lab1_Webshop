@@ -1,14 +1,15 @@
-﻿@rendermode InteractiveServer
+﻿@using WebshopCore
+@rendermode InteractiveServer
 
 <div class="product-preview">
     <div class="product-preview-image">
-        <img src="@ImgSrc" alt="Image for @ProductName" />
+        <img src="@(string.IsNullOrEmpty(ProductDTO.ImageUrl) ? "/resources/no-image-available.jpg" : ProductDTO.ImageUrl)" alt="Image for @ProductDTO.ProductName" />
     </div>
     <div class="product-preview-row barlow-semibold">
-        <a href="/products/@ProductId">@ProductName</a>
+        <a href="/products/@ProductDTO.Id">@ProductDTO.ProductName</a>
     </div>
     <div class="product-preview-row barlow-semibold product-preview-price">
-        @Price @Currency
+        @ProductDTO.Price @Currency
     </div>
     <div class="product-preview-row">
         <span>In stock: @Quantity</span>
@@ -18,20 +19,11 @@
 
 @code {
     [Parameter]
-    public int ProductId { get; set; }
-
-    [Parameter]
-    public string ProductName { get; set; }
-
-    [Parameter]
-    public decimal Price { get; set; }
+    public ProductDTO ProductDTO { get; set; }
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
     [Parameter]
-    public int Quantity { get; set; }
-
-    [Parameter]
-    public string ImgSrc { get; set; } = "/resources/no-image-available.jpg"; // default image as placeholder
+    public int Quantity { get; set; } = 1;
 }
