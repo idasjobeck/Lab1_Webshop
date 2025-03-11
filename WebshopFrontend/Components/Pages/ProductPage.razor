@@ -14,23 +14,26 @@
             <img src="@ProductDTO.ImageUrl" alt="Image for @ProductDTO.ProductName"/>
         </div>
         <div class="product-page-info">
-            @* product info *@
-            <h1>@ProductDTO.ProductName</h1>
-            <p><span class="barlow-semibold">Title: </span>@ProductDTO.Title</p>
-            <p><span class="barlow-semibold">Author: </span>@ProductDTO.Author</p>
-            <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@ProductDTO.Series</p>
-            <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@ProductDTO.NumberInSeries</p>
-            <p><span class="barlow-semibold">Description: </span>@ProductDTO.Description</p>
-            <p><span class="barlow-semibold">ISBN: </span>@ProductDTO.ISBN</p>
-            <p><span class="barlow-semibold">Publisher: </span>@ProductDTO.Publisher</p>
-            <p><span class="barlow-semibold">Published: </span>@ProductDTO.PublishedYear</p>
-            <div class="product-preview-row barlow-semibold product-preview-price">
-                @ProductDTO.Price @Currency
-            </div>
+            <article>
+                @* product info *@
+                <h1>@ProductDTO.ProductName</h1>
+                <p><span class="barlow-semibold">Title: </span>@ProductDTO.Title</p>
+                <p><span class="barlow-semibold">Author: </span>@ProductDTO.Author</p>
+                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@ProductDTO.Series</p>
+                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@ProductDTO.NumberInSeries</p>
+                <p><span class="barlow-semibold">Description: </span>@ProductDTO.Description</p>
+                <p><span class="barlow-semibold">ISBN: </span>@ProductDTO.ISBN</p>
+                <p><span class="barlow-semibold">Publisher: </span>@ProductDTO.Publisher</p>
+                <p><span class="barlow-semibold">Published: </span>@ProductDTO.PublishedYear</p>
+            </article>
             <div class="product-preview-row">
-                <span>In stock: @Quantity</span>
-                @* <button>Add to cart</button> *@ @* needs further functionality on the button *@
-                <AddToCart Product="@ProductDTO" />
+                <div class="product-preview-row barlow-semibold product-page-price">
+                    @ProductDTO.Price @Currency
+                </div>
+                <div class="product-preview-row">
+                    <span>In stock: @Quantity</span>
+                    <AddToCart Product="@ProductDTO"/>
+                </div>
             </div>
         </div>
     </div>
