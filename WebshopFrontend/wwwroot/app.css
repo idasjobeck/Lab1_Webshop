@@ -293,6 +293,10 @@ li.nav-item:hover {
     color: red;
 }
 
+.invalid {
+    border: 1px solid red;
+}
+
 .cart-content-row {
     display: flex;
     flex-direction: column;
