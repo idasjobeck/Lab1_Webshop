@@ -32,10 +32,25 @@ header {
 
     header a {
         text-decoration: none;
+        color: #333;
     }
 
-    header a:visited {
-        color: #333;
+        header a:visited {
+            color: #333;
+        }
+
+form {
+    width: 100%;
+    max-width: 350px;
+}
+
+input {
+    margin: 5px 0;
+    width: 100%;
+}
+
+    input:hover {
+        border-color: #4a758b;
     }
 
 footer {
@@ -50,6 +65,10 @@ footer {
     display: flex;
 }
 
+.text-right {
+    text-align: end;
+}
+
 .header {
     display: flex;
     flex-direction: column;
@@ -58,11 +77,11 @@ footer {
     padding: 20px;
 }
 
-.header div {
-    display: flex;
-    flex-direction: column;
-    padding: 0 30px;
-}
+    .header div {
+        display: flex;
+        flex-direction: column;
+        padding: 0 30px;
+    }
 
 .header-content-top {
     justify-content: start;
@@ -120,7 +139,7 @@ li.nav-item:hover {
 }
 
 .nav-item a.active {
-    /*    background-color: rgba(255, 255, 255, 0.37);*/
+    /*        background-color: rgba(255, 255, 255, 0.37);*/
     font-weight: bold;
     color: lightgray;
 }
@@ -133,6 +152,7 @@ li.nav-item:hover {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .row-products {
@@ -151,6 +171,7 @@ li.nav-item:hover {
 
 .main {
     padding: 20px;
+    width: 100%;
 }
 
 .product-preview {
@@ -164,15 +185,15 @@ li.nav-item:hover {
     width: 300px;
 }
 
-.product-preview a {
-    color: #333;
-    text-decoration: none;
-}
-
-    .product-preview a:hover {
-        color: #4a758b;
-        text-decoration: underline;
+    .product-preview a {
+        color: #333;
+        text-decoration: none;
     }
+
+        .product-preview a:hover {
+            color: #4a758b;
+            text-decoration: underline;
+        }
 
 .product-preview-row {
     display: flex;
@@ -208,7 +229,6 @@ li.nav-item:hover {
 }
 
 .product-page-row-end {
-/*    display: flex;*/
     align-items: end;
 }
 
@@ -237,8 +257,89 @@ li.nav-item:hover {
     font-size: 1.5em;
     justify-content: end;
     margin-bottom: 5px;
-/*    align-items: end;*/
 }
+
+.cart-main-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.cart-address {
+    width: 100%;
+    max-width: 450px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+    .cart-address i {
+        color: red;
+    }
+
+    .cart-address p {
+        margin-bottom: 10px;
+    }
+
+    .cart-address button {
+        margin: 10px;
+    }
+
+.validation-message {
+    margin: 0 0 10px 10px;
+    color: red;
+}
+
+.cart-content-row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #333;
+    background-color: whitesmoke;
+    padding: 0 10px 30px 10px;
+    margin-top: 20px;
+}
+
+.cart-content {
+    width: 100%;
+    max-width: 450px;
+    padding-top: 30px;
+    margin-bottom: 30px;
+}
+
+    .cart-content p {
+        margin-bottom: 10px;
+    }
+
+    .cart-content table {
+        width: 100%;
+    }
+
+.cart-content-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    max-width: 450px;
+}
+
+.order-address {
+    width: 100%;
+    max-width: 450px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+    .order-address p {
+        margin-bottom: 10px;
+    }
 
 footer div.row {
     display: flex;
@@ -283,7 +384,7 @@ footer a {
         display: flex;
         flex-direction: row;
     }
-    
+
     .row-main-layout {
         flex-direction: row;
     }
@@ -302,5 +403,34 @@ footer a {
 
     .product-page-image {
         align-items: start;
+    }
+
+    .cart-main-row {
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: start;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cart-address {
+        width: 45%;
+        display: flex;
+        margin: 20px;
+    }
+
+    .cart-content-row {
+        width: 45%;
+    }
+
+    .cart-content {
+        width: 100%;
+    }
+
+    .order-address {
+        width: 45%;
+        display: flex;
+        margin: 20px;
     }
 }

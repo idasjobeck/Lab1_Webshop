@@ -1,0 +1,79 @@
+﻿@page "/orderconfirmation"
+@using WebshopCore
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
+<h3>Order Confirmation</h3>
+
+<div class="cart-main-row">
+@if (IsOrderEmpty())
+{
+    <p>There is no order to display..</p>
+}
+else
+{
+    <div class="order-address">
+        @* delivery address etc. *@
+        <p class="barlow-semibold">Delivery Details</p>
+            <p><span class="barlow-semibold">Name:</span> @_order.User.FirstName @_order.User.LastName</p>
+            <p><span class="barlow-semibold">Email:</span> @_order.User.Email</p>
+        <p class="barlow-semibold">Address:</p>
+        <p>@_order.User.Address1<br/>
+                <span class="@(string.IsNullOrEmpty(_order.User.Address2) ? "hidden" : "")">@_order.User.Address2<br /></span>
+            @_order.User.City<br/>
+        @_order.User.Zip<br/>
+        @_order.User.Country</p>
+    </div>
+    <div class="cart-content-row">
+        <div class="cart-content">
+            @* order contents *@
+            <p class="barlow-semibold">Items Ordered</p>
+            <table>
+                @foreach (var product in _order.ProductsOrdered)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td class="text-right">@product.Price @Currency</td>
+                    </tr>
+                }
+                <tr class="barlow-regular-italic text-right">
+                    <td>Shipping</td>
+                    <td>@_order.ShippingCost @Currency</td>
+                </tr>
+                <tr class="barlow-semibold-italic text-right">
+                    <td>Total</td>
+                    <td>@_order.TotalPrice @Currency</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}
+</div>
+
+@code {
+    private OrderDTO? _order;
+    public string Currency { get; set; } = "SEK";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _order = await LocalStorage.GetItemAsync<OrderDTO>("order");
+        StateHasChanged();
+    }
+
+    private async Task<OrderDTO> GetOrderAsync()
+    {
+        return await LocalStorage.GetItemAsync<OrderDTO>("order");
+    }
+
+    private bool IsOrderEmpty()
+    {
+        return _order == null;
+    }
+
+    private async Task ClearOrder()
+    {
+        _order = new OrderDTO();
+        await LocalStorage.RemoveItemAsync("order");
+    }
+
+}

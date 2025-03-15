@@ -1,7 +1,154 @@
 ﻿@page "/cart"
+@rendermode InteractiveServer
+@using WebshopCore
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
 
 <h3>Cart</h3>
 
-@code {
+<div class="cart-main-row">
+    <div class="cart-address">
+        @* form for address etc. *@
+        <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
+        <EditForm id="address-form" Model="@_userWithAddress" OnValidSubmit="CheckOut">
+            <DataAnnotationsValidator />
+            <label for="name" class="barlow-semibold">Name</label><i> *</i><br />
+            <InputText id="firstname" @bind-Value="_userWithAddress.FirstName" placeholder="FirstName" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.FirstName)" /></span>
+            <InputText id="lastname" @bind-Value="_userWithAddress.LastName" placeholder="LastName" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.LastName)" /></span>
+            <label for="email" class="barlow-semibold">Email</label><i> *</i><br />
+            <InputText id="email" @bind-Value="_userWithAddress.Email" placeholder="name@email.com" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Email)" /></span>
+            <label for="address" class="barlow-semibold">Address</label><i> *</i><br />
+            <InputText id="address1" @bind-Value="_userWithAddress.Address1" placeholder="Address row 1" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Address1)" /></span>
+            <InputText id="address2" @bind-Value="_userWithAddress.Address2" placeholder="Address row 2 (optional)" />
+            <label for="city" class="barlow-semibold">City</label><i> *</i><br />
+            <InputText id="city" @bind-Value="_userWithAddress.City" placeholder="City" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.City)" /></span>
+            <label for="zip" class="barlow-semibold">Zip</label><i> *</i><br />
+            <InputText id="zip" @bind-Value="_userWithAddress.Zip" placeholder="Zip code" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Zip)" /></span>
+            <label for="country" class="barlow-semibold">Country</label><i> *</i><br />
+            <InputText id="country" @bind-Value="_userWithAddress.Country" placeholder="Country" />
+            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Country)" /></span>
+            <button type="reset" @onclick="Reset">Reset</button>
+        </EditForm>
+    </div>
+    <div class="cart-content-row">
+        <div class="cart-content">
+            @* cart contents *@
+            <p class="barlow-semibold">Items in cart:</p>
+            @if (IsCartEmpty())
+            {
+                <p>Cart is empty..</p>
+            }
+            else
+            {
+                <table>
+                    @foreach (var product in _cart)
+                    {
+                        <tr>
+                            <td>@product.ProductName</td>
+                            <td class="text-right">@product.Price @Currency</td>
+                            <td><RemoveFromCart Product="product"/></td>
+                        </tr>
+                    }
+                    <tr class="barlow-regular-italic text-right">
+                        <td>Shipping *</td>
+                        <td>@(_totalPrice > _freeShippingOver ? 0 : _shippingCost) @Currency</td>
+                        <td></td>
+                    </tr>
+                    <tr class="barlow-semibold-italic text-right">
+                        <td>Total</td>
+                        <td>@_totalPrice @Currency</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <p class="barlow-semi-condensed-light-italic">* Free shipping on orders over @_freeShippingOver @Currency</p>
+            }
+        </div>
+        <div class="cart-content-buttons">
+            <button @onclick="ClearCart" disabled="@(IsCartEmpty())">Empty cart</button>
+            <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button> @* @onclick="CheckOut" *@
+        </div>
+    </div>
+</div>
 
+
+@code {
+    private List<ProductDTO> _cart = new();
+
+    [Parameter]
+    public string Currency { get; set; } = "SEK";
+
+    private decimal _totalPrice;
+    private readonly decimal _shippingCost = 59;
+    private readonly decimal _freeShippingOver = 500;
+
+    private UserWithAddressDTO _userWithAddress = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _cart = await GetItemsFromCartAsync();
+        CalculateTotalPrice();
+        StateHasChanged();
+    }
+
+    private async Task<List<ProductDTO>> GetItemsFromCartAsync()
+    {
+        return await LocalStorage.GetItemAsync<List<ProductDTO>>("cart") ?? new List<ProductDTO>();
+    }
+
+    private bool IsCartEmpty()
+    {
+        return _cart.Count == 0;
+    }
+
+    private void CalculateTotalPrice()
+    {
+        _totalPrice = 0;
+
+        foreach (var item in _cart)
+            _totalPrice += item.Price;
+
+        if (_totalPrice <= _freeShippingOver)
+            _totalPrice += _shippingCost;
+    }
+
+    private void Reset()
+    {
+        _userWithAddress = new UserWithAddressDTO();
+    }
+
+    private async Task ClearCart()
+    {
+        _cart.Clear();
+        await LocalStorage.RemoveItemAsync("cart");
+        StateHasChanged();
+    }
+
+    private async Task CheckOut()
+    {
+        // generate order and store it in local storage
+        await LocalStorage.SetItemAsync("order", GenerateOrder());
+        // clear cart
+        await ClearCart();
+        // navigate to order confirmation page
+        NavigationManager.NavigateTo("/orderconfirmation");
+    }
+
+    private OrderDTO GenerateOrder()
+    {
+        var order = new OrderDTO
+            {
+                ProductsOrdered = _cart,
+                TotalPrice = _totalPrice,
+                Currency = Currency,
+                ShippingCost = _totalPrice > _freeShippingOver ? 0 : _shippingCost,
+                User = _userWithAddress
+            };
+        return order;
+    }
 }
