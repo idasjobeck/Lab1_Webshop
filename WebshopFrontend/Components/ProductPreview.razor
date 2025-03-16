@@ -3,7 +3,7 @@
 
 <div class="product-preview">
     <div class="product-preview-image">
-        <img src="@(string.IsNullOrEmpty(ProductDTO.ImageUrl) ? "/resources/no-image-available.jpg" : ProductDTO.ImageUrl)" alt="Image for @ProductDTO.ProductName" />
+        <img src="@(string.IsNullOrEmpty(ProductDTO.ImageUrl) ? "/resources/no-image-available.jpg" : ProductDTO.ImageUrl)" alt="Image for @ProductDTO.ProductName">
     </div>
     <div class="product-preview-row barlow-semibold">
         <a href="/products/@ProductDTO.Id">@ProductDTO.ProductName</a>

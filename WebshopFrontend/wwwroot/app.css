@@ -167,22 +167,21 @@ li.nav-item:hover {
     color: white;
 }
 
-    .hero-image-text h1 {
+    .hero-image-text h2 {
         font-size: 2em;
         text-transform: uppercase;
         margin: 20px 10px 10px 30px;
     }
 
-    .hero-image-text h2 {
+    .hero-image-text p {
         font-size: 1.8em;
+        font-weight: bold;
         margin: 10px 10px 0 50px;
     }
 
-    .hero-image-text h3 {
-        font-size: 1.5em;
-    }
-
     .hero-image-text a {
+        font-size: 1.5em;
+        font-weight: bold;
         color: white;
         text-decoration: none;
     }

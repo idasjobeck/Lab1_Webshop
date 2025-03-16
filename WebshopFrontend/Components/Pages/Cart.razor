@@ -12,17 +12,19 @@
         <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
         <EditForm id="address-form" Model="@_userWithAddress" OnValidSubmit="CheckOut">
             <DataAnnotationsValidator />
-            <label for="name" class="barlow-semibold">Name</label><i> *</i><br />
+            <label for="firstname" class="barlow-semibold">First name</label><i> *</i><br />
             <InputText id="firstname" @bind-Value="_userWithAddress.FirstName" placeholder="FirstName" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.FirstName)" /></span>
+            <label for="lastname" class="barlow-semibold">Last name</label><i> *</i><br />
             <InputText id="lastname" @bind-Value="_userWithAddress.LastName" placeholder="LastName" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.LastName)" /></span>
             <label for="email" class="barlow-semibold">Email</label><i> *</i><br />
             <InputText id="email" @bind-Value="_userWithAddress.Email" placeholder="name@email.com" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Email)" /></span>
-            <label for="address" class="barlow-semibold">Address</label><i> *</i><br />
+            <label for="address1" class="barlow-semibold">Address row 1</label><i> *</i><br />
             <InputText id="address1" @bind-Value="_userWithAddress.Address1" placeholder="Address row 1" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Address1)" /></span>
+            <label for="address2" class="barlow-semibold">Address row 2 (optional)</label><br />
             <InputText id="address2" @bind-Value="_userWithAddress.Address2" placeholder="Address row 2 (optional)" />
             <label for="city" class="barlow-semibold">City</label><i> *</i><br />
             <InputText id="city" @bind-Value="_userWithAddress.City" placeholder="City" />

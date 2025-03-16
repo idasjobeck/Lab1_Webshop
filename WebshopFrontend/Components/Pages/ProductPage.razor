@@ -9,15 +9,15 @@
 
 @if (ProductDTO != null)
 {
-    <div class="product-page-row">
-        <div class="product-page-image">
-            @* product image *@
-            <img src="@ProductDTO.ImageUrl" alt="Image for @ProductDTO.ProductName"/>
-        </div>
-        <div class="product-page-info">
-            <article>
+    <article>
+        <div class="product-page-row">
+            <div class="product-page-image">
+                @* product image *@
+                <img src="@ProductDTO.ImageUrl" alt="Image for @ProductDTO.ProductName">
+            </div>
+            <div class="product-page-info">
                 @* product info *@
-                <h1>@ProductDTO.ProductName</h1>
+                <h2>@ProductDTO.ProductName</h2>
                 <p><span class="barlow-semibold">Title: </span>@ProductDTO.Title</p>
                 <p><span class="barlow-semibold">Author: </span>@ProductDTO.Author</p>
                 <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@ProductDTO.Series</p>
@@ -26,18 +26,18 @@
                 <p><span class="barlow-semibold">ISBN: </span>@ProductDTO.ISBN</p>
                 <p><span class="barlow-semibold">Publisher: </span>@ProductDTO.Publisher</p>
                 <p><span class="barlow-semibold">Published: </span>@ProductDTO.PublishedYear</p>
-            </article>
-            <div class="product-preview-row">
-                <div class="product-preview-row barlow-semibold product-page-price">
-                    @ProductDTO.Price @Currency
-                </div>
                 <div class="product-preview-row">
-                    <span>In stock: @Quantity</span>
-                    <AddToCart Product="@ProductDTO"/>
+                    <div class="product-preview-row barlow-semibold product-page-price">
+                        @ProductDTO.Price @Currency
+                    </div>
+                    <div class="product-preview-row">
+                        <span>In stock: @Quantity</span>
+                        <AddToCart Product="@ProductDTO" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </article>
 }
 else
 {
@@ -51,7 +51,7 @@ else
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
-    [Parameter] 
+    [Parameter]
     public int Quantity { get; set; } = 1;
 
     public ProductDto ProductDTO { get; set; }
