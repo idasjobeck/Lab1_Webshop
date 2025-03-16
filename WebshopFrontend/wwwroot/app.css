@@ -379,6 +379,14 @@ p.spaced-paragraph {
     max-width: 450px;
 }
 
+.remove-icon {
+    margin-left: 5px;
+}
+
+.remove-icon:hover{
+    cursor: pointer;
+}
+
 .order-address {
     width: 100%;
     max-width: 450px;

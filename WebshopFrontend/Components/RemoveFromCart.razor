@@ -4,7 +4,8 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<button @onclick="() => RemoveFromCartAsync(Product)">Remove</button>
+@* <button @onclick="() => RemoveFromCartAsync(Product)">Remove</button> *@
+<i class="bi bi-trash3 remove-icon" @onclick="() => RemoveFromCartAsync(Product)"></i>
 
 @code {
     private List<ProductDto> _cart = new();
