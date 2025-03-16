@@ -27,16 +27,17 @@ header {
 
     header h1 {
         text-transform: uppercase;
-        color: #333;
+        color: lightgrey; /* #333 */
+        font-size: 2.5em;
     }
 
     header a {
         text-decoration: none;
-        color: #333;
+        color: lightgrey;
     }
 
         header a:visited {
-            color: #333;
+            color: lightgrey;
         }
 
 form {
@@ -72,7 +73,7 @@ footer {
 .header {
     display: flex;
     flex-direction: column;
-    background-color: lightgrey;
+    background-color: black; /* #4a758b lightgrey */
     height: 150px;
     padding: 20px;
 }
@@ -124,7 +125,6 @@ footer {
 
 .nav-item-static {
     display: flex;
-    background-color: #4a758b;
 }
 
 a.nav-link {
@@ -132,6 +132,7 @@ a.nav-link {
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    width: 100%;
 }
 
 li.nav-item:hover {
@@ -139,7 +140,7 @@ li.nav-item:hover {
 }
 
 .nav-item a.active {
-    /*        background-color: rgba(255, 255, 255, 0.37);*/
+    background-color: #4a758b;
     font-weight: bold;
     color: lightgray;
 }
@@ -147,6 +148,48 @@ li.nav-item:hover {
 .page {
     /*    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;*/
 }
+
+.hero-image {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.45)), url('/resources/IMG_3757_2_film.JPG');
+    background-size: cover;
+    background-position: center;
+    height: 700px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-image-text {
+    color: white;
+}
+
+    .hero-image-text h1 {
+        font-size: 2em;
+        text-transform: uppercase;
+        margin: 20px 10px 10px 30px;
+    }
+
+    .hero-image-text h2 {
+        font-size: 1.8em;
+        margin: 10px 10px 0 50px;
+    }
+
+    .hero-image-text h3 {
+        font-size: 1.5em;
+    }
+
+    .hero-image-text a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .hero-image-text a:hover {
+        color: lightgrey;
+    }
 
 .row-main-layout {
     display: flex;
@@ -257,6 +300,10 @@ li.nav-item:hover {
     font-size: 1.5em;
     justify-content: end;
     margin-bottom: 5px;
+}
+
+p.spaced-paragraph {
+    margin: 15px
 }
 
 .cart-main-row {
@@ -396,6 +443,10 @@ footer a {
     .sidebar {
         width: 250px;
         margin-right: 25px;
+    }
+
+    .hero-image {
+        max-width: 1500px;
     }
 
     .product-page-row {
