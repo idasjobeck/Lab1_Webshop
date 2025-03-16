@@ -6,10 +6,10 @@
 <button @onclick="() => AddToCartAsync(Product)">Add to cart</button>
 
 @code {
-    private List<ProductDTO> cart = new();
+    private List<ProductDto> cart = new();
 
     [Parameter]
-    public ProductDTO Product { get; set; }
+    public ProductDto Product { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -17,12 +17,12 @@
         StateHasChanged();
     }
 
-    private async Task<List<ProductDTO>> GetItemsFromCartAsync()
+    private async Task<List<ProductDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<ProductDTO>>("cart") ?? new List<ProductDTO>();
+        return await LocalStorage.GetItemAsync<List<ProductDto>>("cart") ?? new List<ProductDto>();
     }
 
-    private async Task AddToCartAsync(ProductDTO product)
+    private async Task AddToCartAsync(ProductDto product)
     {
         cart = await GetItemsFromCartAsync();
         cart.Add(product);

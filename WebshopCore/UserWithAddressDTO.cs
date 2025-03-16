@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebshopCore
 {
-    public class UserWithAddressDTO
+    public class UserWithAddressDto
     {
         [Required(ErrorMessage = "The first name field is a required field.")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 50 characters.")]

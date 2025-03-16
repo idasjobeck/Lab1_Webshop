@@ -19,7 +19,7 @@ else
 }
 
 @code {
-    public List<ProductDTO> ProductDTOs { get; set; }
+    public List<ProductDto> ProductDTOs { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +31,6 @@ else
     {
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var data = await client.GetStringAsync("/products");
-        ProductDTOs = JsonSerializer.Deserialize<List<ProductDTO>>(data, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+        ProductDTOs = JsonSerializer.Deserialize<List<ProductDto>>(data, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
     }
 }

@@ -51,18 +51,18 @@ else
 </div>
 
 @code {
-    private OrderDTO? _order;
+    private OrderDto? _order;
     public string Currency { get; set; } = "SEK";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _order = await LocalStorage.GetItemAsync<OrderDTO>("order");
+        _order = await LocalStorage.GetItemAsync<OrderDto>("order");
         StateHasChanged();
     }
 
-    private async Task<OrderDTO> GetOrderAsync()
+    private async Task<OrderDto> GetOrderAsync()
     {
-        return await LocalStorage.GetItemAsync<OrderDTO>("order");
+        return await LocalStorage.GetItemAsync<OrderDto>("order");
     }
 
     private bool IsOrderEmpty()
@@ -72,7 +72,7 @@ else
 
     private async Task ClearOrder()
     {
-        _order = new OrderDTO();
+        _order = new OrderDto();
         await LocalStorage.RemoveItemAsync("order");
     }
 

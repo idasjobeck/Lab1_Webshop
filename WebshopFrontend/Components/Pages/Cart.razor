@@ -16,23 +16,23 @@
             <InputText id="firstname" @bind-Value="_userWithAddress.FirstName" placeholder="FirstName" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.FirstName)" /></span>
             <InputText id="lastname" @bind-Value="_userWithAddress.LastName" placeholder="LastName" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.LastName)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.LastName)" /></span>
             <label for="email" class="barlow-semibold">Email</label><i> *</i><br />
             <InputText id="email" @bind-Value="_userWithAddress.Email" placeholder="name@email.com" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Email)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Email)" /></span>
             <label for="address" class="barlow-semibold">Address</label><i> *</i><br />
             <InputText id="address1" @bind-Value="_userWithAddress.Address1" placeholder="Address row 1" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Address1)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Address1)" /></span>
             <InputText id="address2" @bind-Value="_userWithAddress.Address2" placeholder="Address row 2 (optional)" />
             <label for="city" class="barlow-semibold">City</label><i> *</i><br />
             <InputText id="city" @bind-Value="_userWithAddress.City" placeholder="City" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.City)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.City)" /></span>
             <label for="zip" class="barlow-semibold">Zip</label><i> *</i><br />
             <InputText id="zip" @bind-Value="_userWithAddress.Zip" placeholder="Zip code" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Zip)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Zip)" /></span>
             <label for="country" class="barlow-semibold">Country</label><i> *</i><br />
             <InputText id="country" @bind-Value="_userWithAddress.Country" placeholder="Country" />
-            <span class="cart-address-validation barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Country)" /></span>
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Country)" /></span>
             <button type="reset" @onclick="Reset">Reset</button>
         </EditForm>
     </div>
@@ -71,14 +71,14 @@
         </div>
         <div class="cart-content-buttons">
             <button @onclick="ClearCart" disabled="@(IsCartEmpty())">Empty cart</button>
-            <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button> @* @onclick="CheckOut" *@
+            <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button>
         </div>
     </div>
 </div>
 
 
 @code {
-    private List<ProductDTO> _cart = new();
+    private List<ProductDto> _cart = new();
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
@@ -87,7 +87,7 @@
     private readonly decimal _shippingCost = 59;
     private readonly decimal _freeShippingOver = 500;
 
-    private UserWithAddressDTO _userWithAddress = new();
+    private UserWithAddressDto _userWithAddress = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -96,9 +96,9 @@
         StateHasChanged();
     }
 
-    private async Task<List<ProductDTO>> GetItemsFromCartAsync()
+    private async Task<List<ProductDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<ProductDTO>>("cart") ?? new List<ProductDTO>();
+        return await LocalStorage.GetItemAsync<List<ProductDto>>("cart") ?? new List<ProductDto>();
     }
 
     private bool IsCartEmpty()
@@ -119,7 +119,7 @@
 
     private void Reset()
     {
-        _userWithAddress = new UserWithAddressDTO();
+        _userWithAddress = new UserWithAddressDto();
     }
 
     private async Task ClearCart()
@@ -139,9 +139,9 @@
         NavigationManager.NavigateTo("/orderconfirmation");
     }
 
-    private OrderDTO GenerateOrder()
+    private OrderDto GenerateOrder()
     {
-        var order = new OrderDTO
+        var order = new OrderDto
             {
                 ProductsOrdered = _cart,
                 TotalPrice = _totalPrice,

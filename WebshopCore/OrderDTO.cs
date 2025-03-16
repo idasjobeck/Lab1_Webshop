@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WebshopCore
 {
-    public class OrderDTO
+    public class OrderDto
     {
-        public List<ProductDTO> ProductsOrdered { get; set; }
+        public List<ProductDto> ProductsOrdered { get; set; }
         public string Currency { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal ShippingCost { get; set; }
-        public UserWithAddressDTO User { get; set; }
+        public UserWithAddressDto User { get; set; }
     }
 }

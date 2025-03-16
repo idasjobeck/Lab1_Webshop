@@ -13,8 +13,8 @@ namespace WebshopBackend
             //builder.Services.AddSwaggerGen();
 
             //app.MapGet("/", () => "Hello World!");
-            app.MapGet("/products", () => DTOExtensions.GetProducts());
-            app.MapGet("/products/{id}", (int id) => DTOExtensions.GetProductById(id));
+            app.MapGet("/products", () => DtoExtensions.GetProducts());
+            app.MapGet("/products/{id}", (int id) => DtoExtensions.GetProductById(id));
 
             if (app.Environment.IsDevelopment())
             {

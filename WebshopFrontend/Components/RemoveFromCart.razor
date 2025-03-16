@@ -7,10 +7,10 @@
 <button @onclick="() => RemoveFromCartAsync(Product)">Remove</button>
 
 @code {
-    private List<ProductDTO> _cart = new();
+    private List<ProductDto> _cart = new();
 
     [Parameter]
-    public ProductDTO Product { get; set; }
+    public ProductDto Product { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -18,12 +18,12 @@
         StateHasChanged();
     }
 
-    private async Task<List<ProductDTO>> GetItemsFromCartAsync()
+    private async Task<List<ProductDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<ProductDTO>>("cart") ?? new List<ProductDTO>();
+        return await LocalStorage.GetItemAsync<List<ProductDto>>("cart") ?? new List<ProductDto>();
     }
 
-    private async Task RemoveFromCartAsync(ProductDTO product)
+    private async Task RemoveFromCartAsync(ProductDto product)
     {
         _cart = await GetItemsFromCartAsync();
         _cart.RemoveAll(p => p.Id == product.Id);
