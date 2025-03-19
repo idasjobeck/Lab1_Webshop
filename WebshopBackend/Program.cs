@@ -30,7 +30,7 @@ namespace WebshopBackend
 
             var app = builder.Build();
 
-            //app.MapGet("/", () => "Hello World!");
+            //mapping endpoints - make its own method?
             app.MapGet("/products", () => DtoExtensions.GetProducts());
             app.MapGet("/products/{id}", (int id) => DtoExtensions.GetProductById(id));
 
