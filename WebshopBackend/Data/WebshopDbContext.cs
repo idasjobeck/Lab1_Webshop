@@ -32,6 +32,7 @@ namespace WebshopBackend.Data
                 .UsingEntity<AuthorBook>();
             modelBuilder.Entity<Book>().ToTable(b =>
                 b.HasCheckConstraint("CK_Book_SalePercentage", "SalePercentage BETWEEN 0 AND 100"));
+            modelBuilder.Entity<Book>().ToTable(b => b.HasCheckConstraint("CK_Book_AvailableQty", "AvailableQty >= 0"));
 
             base.OnModelCreating(modelBuilder);
         }
