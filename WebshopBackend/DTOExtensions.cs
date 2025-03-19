@@ -21,7 +21,7 @@ namespace WebshopBackend
             };
         }
 
-        public static ProductDto GetProductById(int id)
+        public static ProductDto? GetProductById(int id)
         {
             var products = GetProducts().Where(product => product.Id == id).ToList();
             return products.Count > 0 ? products[0] : null;

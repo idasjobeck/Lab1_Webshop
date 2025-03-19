@@ -20,7 +20,7 @@ else
 }
 
 @code {
-    public List<ProductDto> ProductDTOs { get; set; }
+    public required List<ProductDto>? ProductDTOs { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

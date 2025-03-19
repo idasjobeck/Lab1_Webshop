@@ -54,7 +54,7 @@ else
     [Parameter]
     public int Quantity { get; set; } = 1;
 
-    public ProductDto ProductDTO { get; set; }
+    public required ProductDto? ProductDTO { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,6 +71,6 @@ else
 
     private bool InSeries()
     {
-        return !string.IsNullOrEmpty(ProductDTO.Series);
+        return !string.IsNullOrEmpty(ProductDTO?.Series);
     }
 }

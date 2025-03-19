@@ -9,7 +9,7 @@
     private List<ProductDto> cart = new();
 
     [Parameter]
-    public ProductDto Product { get; set; }
+    public required ProductDto Product { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
