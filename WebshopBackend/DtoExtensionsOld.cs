@@ -2,7 +2,7 @@
 
 namespace WebshopBackend
 {
-    public static class DtoExtensions
+    public static class DtoExtensionsOld
     {
         public static List<ProductDto> GetProducts()
         {

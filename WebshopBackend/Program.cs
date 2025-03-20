@@ -31,8 +31,8 @@ namespace WebshopBackend
             var app = builder.Build();
 
             //mapping endpoints - make its own method?
-            app.MapGet("/products", () => DtoExtensions.GetProducts());
-            app.MapGet("/products/{id}", (int id) => DtoExtensions.GetProductById(id));
+            app.MapGet("/products", () => DtoExtensionsOld.GetProducts());
+            app.MapGet("/products/{id}", (int id) => DtoExtensionsOld.GetProductById(id));
 
             if (app.Environment.IsDevelopment())
             {
