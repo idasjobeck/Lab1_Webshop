@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public required Title Title { get; set; }
         public Series? Series { get; set; }
-        public int NumberInSeries { get; set; }
+        public int? NumberInSeries { get; set; }
         public required Genre Genre { get; set; }
         public required string ISBN { get; set; }
         public DateOnly PublishedYear { get; set; }
