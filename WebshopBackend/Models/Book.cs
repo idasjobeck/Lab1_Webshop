@@ -12,6 +12,7 @@
         public required Publisher Publisher { get; set; }
         public required Edition Edition { get; set; }
         public string? Description { get; set; }
+        public string? ImageUrl { get; set; }
         public decimal Price { get; set; }
         public int? SalePercentage { get; set; }
         public int AvailableQty { get; set; }
