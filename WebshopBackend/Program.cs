@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebshopBackend.ApiEndpoints;
 using WebshopBackend.Data;
 using WebshopBackend.Models;
 using WebshopCore;
@@ -30,9 +31,10 @@ namespace WebshopBackend
 
             var app = builder.Build();
 
-            //mapping endpoints - make its own method?
-            app.MapGet("/products", () => DtoExtensionsOld.GetProducts());
-            app.MapGet("/products/{id}", (int id) => DtoExtensionsOld.GetProductById(id));
+            var bookEndpoints = new BookEndpoints();
+            app.MapGet("/products", (WebshopDbContext context) => bookEndpoints.GetProductsAsync(context));
+            app.MapGet("/products/{id}", (int id, WebshopDbContext context) => bookEndpoints.GetProductByIdAsync(id, context));
+            
 
             if (app.Environment.IsDevelopment())
             {
@@ -45,7 +47,8 @@ namespace WebshopBackend
                     var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
                     db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
-                    
+
+                    //populate database with dummy data
                     var dummyData = new DummyDataForDb(db);
                     await dummyData.PopulateDatabaseAsync();
                 }
