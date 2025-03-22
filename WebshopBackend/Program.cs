@@ -9,7 +9,7 @@ namespace WebshopBackend
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             
@@ -45,7 +45,9 @@ namespace WebshopBackend
                     var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
                     db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
-                    //could do with method to populate database with some data, so there's some products in it when creating it
+                    
+                    var dummyData = new DummyDataForDb(db);
+                    await dummyData.PopulateDatabaseAsync();
                 }
             }
 
