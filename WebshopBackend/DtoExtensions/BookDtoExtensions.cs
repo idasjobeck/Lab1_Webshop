@@ -18,6 +18,7 @@ namespace WebshopBackend.DtoExtensions
             Publisher = bookDto.Publisher.ToPublisher(),
             Edition = bookDto.Edition.ToEdition(),
             Description = bookDto.Description,
+            ImageUrl = bookDto.ImageUrl,
             Price = bookDto.Price,
             SalePercentage = CalculateSalePercentage(bookDto.Price, bookDto.SalePrice),
             AvailableQty = bookDto.AvailableQty
@@ -37,6 +38,7 @@ namespace WebshopBackend.DtoExtensions
             Publisher = book.Publisher.PublisherName,
             Edition = book.Edition.EditionName,
             Description = book.Description,
+            ImageUrl = book.ImageUrl,
             Price = book.Price,
             SalePrice = book.SalePercentage == null ? null : book.Price * (1 - book.SalePercentage / 100),
             AvailableQty = book.AvailableQty
