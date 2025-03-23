@@ -6,7 +6,9 @@
 
 <div class="product-preview">
     <div class="product-preview-content-container">
+        
         <div class="product-preview-image">
+            <div class="product-soldout-image-overlay @(Product.AvailableQty == 0 ? "" : "hidden")"><p>SOLD<br />OUT</p></div>
             <img src="@(string.IsNullOrEmpty(Product.ImageUrl) ? "/resources/no-image-available.jpg" : Product.ImageUrl)" alt="Image for @Product.ProductName">
         </div>
         <div class="product-preview-row barlow-semibold">

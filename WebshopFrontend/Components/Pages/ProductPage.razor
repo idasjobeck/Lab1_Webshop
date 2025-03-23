@@ -13,6 +13,7 @@
     <article>
         <div class="product-page-row">
             <div class="product-page-image">
+                <div class="product-soldout-image-overlay @(Product.AvailableQty == 0 ? "" : "hidden")"><p>SOLD<br />OUT</p></div>
                 @* product image *@
                 <img src="@Product.ImageUrl" alt="Image for @Product.ProductName">
             </div>
