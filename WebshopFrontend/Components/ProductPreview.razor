@@ -3,18 +3,22 @@
 @rendermode InteractiveServer
 
 <div class="product-preview">
-    <div class="product-preview-image">
-        <img src="@(string.IsNullOrEmpty(Product.ImageUrl) ? "/resources/no-image-available.jpg" : Product.ImageUrl)" alt="Image for @Product.ProductName">
+    <div class="product-preview-content-container">
+        <div class="product-preview-image">
+            <img src="@(string.IsNullOrEmpty(Product.ImageUrl) ? "/resources/no-image-available.jpg" : Product.ImageUrl)" alt="Image for @Product.ProductName">
+        </div>
+        <div class="product-preview-row barlow-semibold">
+            <a href="/products/@Product.Id">@Product.ProductName</a>
+        </div>
     </div>
-    <div class="product-preview-row barlow-semibold">
-        <a href="/products/@Product.Id">@Product.ProductName</a>
-    </div>
-    <div class="product-preview-row barlow-semibold product-preview-price">
-        @Product.Price @Currency
-    </div>
-    <div class="product-preview-row">
-        <span>In stock: @Quantity</span>
-        <AddToCart Product="@Product" />
+    <div class="product-preview-content-container">
+        <div class="product-preview-row barlow-semibold product-preview-price">
+            @Product.Price @Currency
+        </div>
+        <div class="product-preview-row">
+            <span>In stock: @Product.AvailableQty</span>
+            <AddToCart Product="@Product"/>
+        </div>
     </div>
 </div>
 
@@ -25,6 +29,6 @@
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
-    [Parameter]
-    public int Quantity { get; set; } = 1;
+    // [Parameter]
+    // public int Quantity { get; set; } = 1;
 }

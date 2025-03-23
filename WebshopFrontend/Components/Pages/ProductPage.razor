@@ -17,23 +17,27 @@
                 <img src="@Product.ImageUrl" alt="Image for @Product.ProductName">
             </div>
             <div class="product-page-info">
-                @* product info *@
-                <h2>@Product.ProductName</h2>
-                <p><span class="barlow-semibold">Title: </span>@Product.Title</p>
-                <p><span class="barlow-semibold">Author: </span>@Product.Authors</p>
-                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@Product.Series</p>
-                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@Product.NumberInSeries</p>
-                <p><span class="barlow-semibold">Description: </span>@Product.Description</p>
-                <p><span class="barlow-semibold">ISBN: </span>@Product.ISBN</p>
-                <p><span class="barlow-semibold">Publisher: </span>@Product.Publisher</p>
-                <p><span class="barlow-semibold">Published: </span>@Product.PublishedYear</p>
-                <div class="product-preview-row">
-                    <div class="product-preview-row barlow-semibold product-page-price">
-                        @Product.Price @Currency
-                    </div>
+                <div class="product-page-content-container">
+                    @* product info *@
+                    <h2>@Product.ProductName</h2>
+                    <p><span class="barlow-semibold">Title: </span>@Product.Title</p>
+                    <p><span class="barlow-semibold">Author: </span>@Product.Authors</p>
+                    <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@Product.Series</p>
+                    <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@Product.NumberInSeries</p>
+                    <p><span class="barlow-semibold">Description: </span>@Product.Description</p>
+                    <p><span class="barlow-semibold">ISBN: </span>@Product.ISBN</p>
+                    <p><span class="barlow-semibold">Publisher: </span>@Product.Publisher</p>
+                    <p><span class="barlow-semibold">Published: </span>@Product.PublishedYear</p>
+                </div>
+                <div class="product-page-content-container">
                     <div class="product-preview-row">
-                        <span>In stock: @Quantity</span>
-                        <AddToCart Product="@Product" />
+                        <div class="product-preview-row barlow-semibold product-page-price">
+                            @Product.Price @Currency
+                        </div>
+                        <div class="product-preview-row">
+                            <span>In stock: @Product.AvailableQty</span>
+                            <AddToCart Product="@Product"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,8 +56,8 @@ else
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
-    [Parameter]
-    public int Quantity { get; set; } = 1;
+    // [Parameter]
+    // public int Quantity { get; set; } = 1;
 
     public required BookDto? Product { get; set; }
 
