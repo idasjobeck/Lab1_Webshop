@@ -36,7 +36,7 @@
                         </div>
                         <div class="product-preview-row">
                             <span>In stock: @Product.AvailableQty</span>
-                            <AddToCart Product="@Product"/>
+                            <AddToCart OnAddToCart="FetchDataById" Product="@Product" ButtonDisabled="@(Product.AvailableQty == 0)" />
                         </div>
                     </div>
                 </div>
@@ -55,9 +55,6 @@ else
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
-
-    // [Parameter]
-    // public int Quantity { get; set; } = 1;
 
     public required BookDto? Product { get; set; }
 

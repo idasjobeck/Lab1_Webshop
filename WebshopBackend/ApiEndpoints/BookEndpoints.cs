@@ -42,5 +42,30 @@ namespace WebshopBackend.ApiEndpoints
 
             return book!.ToBookDto();
         }
+
+        public async Task DecreaseAvailableQtyAsync(int id, WebshopDbContext context)
+        {
+            var book = await context.Books.FindAsync(id);
+
+            if (book == null)
+                return;
+
+            if (book.AvailableQty > 0)
+            {
+                book.AvailableQty -= 1;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task IncreaseAvailableQtyAsync(int id, WebshopDbContext context)
+        {
+            var book = await context.Books.FindAsync(id);
+
+            if (book == null)
+                return;
+            
+            book.AvailableQty += 1;
+            await context.SaveChangesAsync();
+        }
     }
 }

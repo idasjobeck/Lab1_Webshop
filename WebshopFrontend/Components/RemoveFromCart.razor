@@ -29,5 +29,8 @@
         _cart = await GetItemsFromCartAsync();
         _cart.RemoveAll(p => p.Id == product.Id);
         await LocalStorage.SetItemAsync("cart", _cart);
+
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var response = await client.PatchAsync($"/increaseAvailableQty/{Product.Id}", null);
     }
 }

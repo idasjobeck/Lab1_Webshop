@@ -4,13 +4,19 @@
 @inject IHttpClientFactory HttpClientFactory
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-<button @onclick="() => AddToCartAsync(Product)">Add to cart</button>
+<button @onclick="() => AddToCartAsync(Product)" disabled="@ButtonDisabled">Add to cart</button>
 
 @code {
     private List<BookDto> _cart = new();
 
     [Parameter]
     public required BookDto Product { get; set; }
+
+    [Parameter]
+    public EventCallback OnAddToCart { get; set; }
+
+    [Parameter]
+    public bool ButtonDisabled { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -28,5 +34,9 @@
         _cart = await GetItemsFromCartAsync();
         _cart.Add(book);
         await LocalStorage.SetItemAsync("cart", _cart);
+
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var response = await client.PatchAsync($"/decreaseAvailableQty/{Product.Id}", null);
+        await OnAddToCart.InvokeAsync();
     }
 }

@@ -1,6 +1,8 @@
-﻿@using WebshopCore
+﻿@using System.Text.Json
+@using WebshopCore
 @using WebshopCore.Dtos
 @rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
 
 <div class="product-preview">
     <div class="product-preview-content-container">
@@ -17,7 +19,7 @@
         </div>
         <div class="product-preview-row">
             <span>In stock: @Product.AvailableQty</span>
-            <AddToCart Product="@Product"/>
+            <AddToCart OnAddToCart="FetchDataById" Product="@Product" ButtonDisabled="@(Product.AvailableQty == 0)"/>
         </div>
     </div>
 </div>
@@ -29,6 +31,11 @@
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
-    // [Parameter]
-    // public int Quantity { get; set; } = 1;
+    private async Task FetchDataById()
+    {
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var data = await client.GetStringAsync($"/products/{Product.Id}");
+        Product = JsonSerializer.Deserialize<BookDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //StateHasChanged();
+    }
 }

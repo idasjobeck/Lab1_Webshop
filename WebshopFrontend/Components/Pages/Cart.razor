@@ -3,6 +3,7 @@
 @using WebshopCore
 @using WebshopCore.Dtos
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Cart</PageTitle>
@@ -127,6 +128,13 @@
 
     private async Task ClearCart()
     {
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+
+        foreach (var item in _cart)
+        {
+            var response = await client.PatchAsync($"/increaseAvailableQty/{item.Id}", null);
+        }
+
         _cart.Clear();
         await LocalStorage.RemoveItemAsync("cart");
         StateHasChanged();
