@@ -2,7 +2,6 @@
 @rendermode InteractiveServer
 @using WebshopCore
 @using WebshopCore.Dtos
-@using OrderDto = WebshopCore.OrderDto
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 
@@ -143,9 +142,9 @@
         NavigationManager.NavigateTo("/orderconfirmation");
     }
 
-    private WebshopCore.Dtos.OrderDto GenerateOrder()
+    private OrderDto GenerateOrder()
     {
-        var order = new WebshopCore.Dtos.OrderDto
+        var order = new OrderDto
             {
                 OrderNumber = new Guid(),
                 ShippingDetails = _shippingDetails,
@@ -154,7 +153,7 @@
                 OrderStatus = "Ordered",
                 ShippingPrice = _totalPrice > _freeShippingOver ? 0 : _shippingCost,
                 TotalPrice = _totalPrice,
-                OrderItems = new List<WebshopCore.Dtos.OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
+                OrderItems = new List<OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
             };
 
         return order;
