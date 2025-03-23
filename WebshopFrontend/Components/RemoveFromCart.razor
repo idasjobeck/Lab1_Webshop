@@ -1,17 +1,17 @@
 ﻿@using System.Diagnostics
 @using WebshopCore
+@using WebshopCore.Dtos
 @rendermode InteractiveServer
 @inject IHttpClientFactory HttpClientFactory
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
-@* <button @onclick="() => RemoveFromCartAsync(Product)">Remove</button> *@
 <i class="bi bi-trash3 remove-icon" @onclick="() => RemoveFromCartAsync(Product)"></i>
 
 @code {
-    private List<ProductDto> _cart = new();
+    private List<BookDto> _cart = new();
 
     [Parameter]
-    public required ProductDto Product { get; set; }
+    public required BookDto Product { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -19,12 +19,12 @@
         StateHasChanged();
     }
 
-    private async Task<List<ProductDto>> GetItemsFromCartAsync()
+    private async Task<List<BookDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<ProductDto>>("cart") ?? new List<ProductDto>();
+        return await LocalStorage.GetItemAsync<List<BookDto>>("cart") ?? new List<BookDto>();
     }
 
-    private async Task RemoveFromCartAsync(ProductDto product)
+    private async Task RemoveFromCartAsync(BookDto product)
     {
         _cart = await GetItemsFromCartAsync();
         _cart.RemoveAll(p => p.Id == product.Id);

@@ -8,8 +8,8 @@ namespace WebshopCore.Dtos
 {
     public class OrderItemDto
     {
-        public required string ProductName { get; set; }
-        public required int Quantity { get; set; }
-        public required decimal PriceAtPurchase { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+        public decimal PriceAtPurchase { get; set; }
     }
 }

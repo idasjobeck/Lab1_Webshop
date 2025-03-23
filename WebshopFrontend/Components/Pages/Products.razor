@@ -1,16 +1,17 @@
 ﻿@page "/products"
 @using WebshopCore
 @using System.Text.Json
+@using WebshopCore.Dtos
 @inject IHttpClientFactory HttpClientFactory
 
 <PageTitle>Products</PageTitle>
 
-@if (ProductDTOs != null)
+@if (BookDtos != null)
 {
     <div class="row-products">
-        @foreach (var product in ProductDTOs)
+        @foreach (var bookDto in BookDtos)
         {
-            <ProductPreview ProductDTO="@product" />
+            <ProductPreview Product="@bookDto" />
         }
     </div>
 }
@@ -20,7 +21,7 @@ else
 }
 
 @code {
-    public required List<ProductDto>? ProductDTOs { get; set; }
+    public required List<BookDto>? BookDtos { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,6 +33,6 @@ else
     {
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var data = await client.GetStringAsync("/products");
-        ProductDTOs = JsonSerializer.Deserialize<List<ProductDto>>(data, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
+        BookDtos = JsonSerializer.Deserialize<List<BookDto>>(data, new JsonSerializerOptions {PropertyNameCaseInsensitive = true});
     }
 }

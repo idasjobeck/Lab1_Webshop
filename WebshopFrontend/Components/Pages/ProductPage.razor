@@ -3,36 +3,37 @@
 @using System.Data.SqlTypes
 @using WebshopCore
 @using System.Text.Json
+@using WebshopCore.Dtos
 @inject IHttpClientFactory HttpClientFactory
 
 <PageTitle>Product Page</PageTitle>
 
-@if (ProductDTO != null)
+@if (Product != null)
 {
     <article>
         <div class="product-page-row">
             <div class="product-page-image">
                 @* product image *@
-                <img src="@ProductDTO.ImageUrl" alt="Image for @ProductDTO.ProductName">
+                <img src="@Product.ImageUrl" alt="Image for @Product.ProductName">
             </div>
             <div class="product-page-info">
                 @* product info *@
-                <h2>@ProductDTO.ProductName</h2>
-                <p><span class="barlow-semibold">Title: </span>@ProductDTO.Title</p>
-                <p><span class="barlow-semibold">Author: </span>@ProductDTO.Author</p>
-                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@ProductDTO.Series</p>
-                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@ProductDTO.NumberInSeries</p>
-                <p><span class="barlow-semibold">Description: </span>@ProductDTO.Description</p>
-                <p><span class="barlow-semibold">ISBN: </span>@ProductDTO.ISBN</p>
-                <p><span class="barlow-semibold">Publisher: </span>@ProductDTO.Publisher</p>
-                <p><span class="barlow-semibold">Published: </span>@ProductDTO.PublishedYear</p>
+                <h2>@Product.ProductName</h2>
+                <p><span class="barlow-semibold">Title: </span>@Product.Title</p>
+                <p><span class="barlow-semibold">Author: </span>@Product.Authors</p>
+                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Series: </span>@Product.Series</p>
+                <p><span class="barlow-semibold @(InSeries() ? string.Empty : "hidden")">Book number in series: </span>@Product.NumberInSeries</p>
+                <p><span class="barlow-semibold">Description: </span>@Product.Description</p>
+                <p><span class="barlow-semibold">ISBN: </span>@Product.ISBN</p>
+                <p><span class="barlow-semibold">Publisher: </span>@Product.Publisher</p>
+                <p><span class="barlow-semibold">Published: </span>@Product.PublishedYear</p>
                 <div class="product-preview-row">
                     <div class="product-preview-row barlow-semibold product-page-price">
-                        @ProductDTO.Price @Currency
+                        @Product.Price @Currency
                     </div>
                     <div class="product-preview-row">
                         <span>In stock: @Quantity</span>
-                        <AddToCart Product="@ProductDTO" />
+                        <AddToCart Product="@Product" />
                     </div>
                 </div>
             </div>
@@ -54,7 +55,7 @@ else
     [Parameter]
     public int Quantity { get; set; } = 1;
 
-    public required ProductDto? ProductDTO { get; set; }
+    public required BookDto? Product { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,11 +67,11 @@ else
     {
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var data = await client.GetStringAsync($"/products/{Id}");
-        ProductDTO = JsonSerializer.Deserialize<ProductDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        Product = JsonSerializer.Deserialize<BookDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
     private bool InSeries()
     {
-        return !string.IsNullOrEmpty(ProductDTO?.Series);
+        return !string.IsNullOrEmpty(Product?.Series);
     }
 }

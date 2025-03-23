@@ -1,6 +1,8 @@
 ﻿@page "/cart"
 @rendermode InteractiveServer
 @using WebshopCore
+@using WebshopCore.Dtos
+@using OrderDto = WebshopCore.OrderDto
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
 
@@ -10,31 +12,31 @@
     <div class="cart-address">
         @* form for address etc. *@
         <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
-        <EditForm id="address-form" Model="@_userWithAddress" OnValidSubmit="CheckOut">
+        <EditForm id="address-form" Model="@_shippingDetails" OnValidSubmit="CheckOut">
             <DataAnnotationsValidator />
             <label for="firstname" class="barlow-semibold">First name</label><i> *</i><br />
-            <InputText id="firstname" @bind-Value="_userWithAddress.FirstName" placeholder="FirstName" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.FirstName)" /></span>
+            <InputText id="firstname" @bind-Value="_shippingDetails.FirstName" placeholder="FirstName" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.FirstName)" /></span>
             <label for="lastname" class="barlow-semibold">Last name</label><i> *</i><br />
-            <InputText id="lastname" @bind-Value="_userWithAddress.LastName" placeholder="LastName" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.LastName)" /></span>
+            <InputText id="lastname" @bind-Value="_shippingDetails.LastName" placeholder="LastName" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.LastName)" /></span>
             <label for="email" class="barlow-semibold">Email</label><i> *</i><br />
-            <InputText id="email" @bind-Value="_userWithAddress.Email" placeholder="name@email.com" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Email)" /></span>
+            <InputText id="email" @bind-Value="_shippingDetails.Email" placeholder="name@email.com" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Email)" /></span>
             <label for="address1" class="barlow-semibold">Address row 1</label><i> *</i><br />
-            <InputText id="address1" @bind-Value="_userWithAddress.Address1" placeholder="Address row 1" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Address1)" /></span>
+            <InputText id="address1" @bind-Value="_shippingDetails.Address1" placeholder="Address row 1" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Address1)" /></span>
             <label for="address2" class="barlow-semibold">Address row 2 (optional)</label><br />
-            <InputText id="address2" @bind-Value="_userWithAddress.Address2" placeholder="Address row 2 (optional)" />
+            <InputText id="address2" @bind-Value="_shippingDetails.Address2" placeholder="Address row 2 (optional)" />
             <label for="city" class="barlow-semibold">City</label><i> *</i><br />
-            <InputText id="city" @bind-Value="_userWithAddress.City" placeholder="City" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.City)" /></span>
+            <InputText id="city" @bind-Value="_shippingDetails.City" placeholder="City" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.City)" /></span>
             <label for="zip" class="barlow-semibold">Zip</label><i> *</i><br />
-            <InputText id="zip" @bind-Value="_userWithAddress.Zip" placeholder="Zip code" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Zip)" /></span>
+            <InputText id="zip" @bind-Value="_shippingDetails.Zip" placeholder="Zip code" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Zip)" /></span>
             <label for="country" class="barlow-semibold">Country</label><i> *</i><br />
-            <InputText id="country" @bind-Value="_userWithAddress.Country" placeholder="Country" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _userWithAddress.Country)" /></span>
+            <InputText id="country" @bind-Value="_shippingDetails.Country" placeholder="Country" />
+            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Country)" /></span>
             <button type="reset" @onclick="Reset">Reset</button>
         </EditForm>
     </div>
@@ -80,7 +82,7 @@
 
 
 @code {
-    private List<ProductDto> _cart = new();
+    private List<BookDto> _cart = new();
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
@@ -89,7 +91,7 @@
     private readonly decimal _shippingCost = 59;
     private readonly decimal _freeShippingOver = 500;
 
-    private UserWithAddressDto _userWithAddress = new();
+    private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = ""};
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -98,9 +100,9 @@
         StateHasChanged();
     }
 
-    private async Task<List<ProductDto>> GetItemsFromCartAsync()
+    private async Task<List<BookDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<ProductDto>>("cart") ?? new List<ProductDto>();
+        return await LocalStorage.GetItemAsync<List<BookDto>>("cart") ?? new List<BookDto>();
     }
 
     private bool IsCartEmpty()
@@ -121,7 +123,7 @@
 
     private void Reset()
     {
-        _userWithAddress = new UserWithAddressDto();
+        _shippingDetails = new ShippingDetailsDto { FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = "" };
     }
 
     private async Task ClearCart()
@@ -133,7 +135,7 @@
 
     private async Task CheckOut()
     {
-        // generate order and store it in local storage
+        // generate order and store it in local storage - will be updated to store in database
         await LocalStorage.SetItemAsync("order", GenerateOrder());
         // clear cart
         await ClearCart();
@@ -141,16 +143,20 @@
         NavigationManager.NavigateTo("/orderconfirmation");
     }
 
-    private OrderDto GenerateOrder()
+    private WebshopCore.Dtos.OrderDto GenerateOrder()
     {
-        var order = new OrderDto
+        var order = new WebshopCore.Dtos.OrderDto
             {
-                ProductsOrdered = _cart,
+                OrderNumber = new Guid(),
+                ShippingDetails = _shippingDetails,
+                OrderDate = DateTime.Now,
+                ShippingDate = null,
+                OrderStatus = "Ordered",
+                ShippingPrice = _totalPrice > _freeShippingOver ? 0 : _shippingCost,
                 TotalPrice = _totalPrice,
-                Currency = Currency,
-                ShippingCost = _totalPrice > _freeShippingOver ? 0 : _shippingCost,
-                User = _userWithAddress
+                OrderItems = new List<WebshopCore.Dtos.OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
             };
+
         return order;
     }
 }

@@ -1,25 +1,26 @@
 ﻿@using WebshopCore
+@using WebshopCore.Dtos
 @rendermode InteractiveServer
 
 <div class="product-preview">
     <div class="product-preview-image">
-        <img src="@(string.IsNullOrEmpty(ProductDTO.ImageUrl) ? "/resources/no-image-available.jpg" : ProductDTO.ImageUrl)" alt="Image for @ProductDTO.ProductName">
+        <img src="@(string.IsNullOrEmpty(Product.ImageUrl) ? "/resources/no-image-available.jpg" : Product.ImageUrl)" alt="Image for @Product.ProductName">
     </div>
     <div class="product-preview-row barlow-semibold">
-        <a href="/products/@ProductDTO.Id">@ProductDTO.ProductName</a>
+        <a href="/products/@Product.Id">@Product.ProductName</a>
     </div>
     <div class="product-preview-row barlow-semibold product-preview-price">
-        @ProductDTO.Price @Currency
+        @Product.Price @Currency
     </div>
     <div class="product-preview-row">
         <span>In stock: @Quantity</span>
-        <AddToCart Product="@ProductDTO" />
+        <AddToCart Product="@Product" />
     </div>
 </div>
 
 @code {
     [Parameter]
-    public required ProductDto ProductDTO { get; set; }
+    public required BookDto Product { get; set; }
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
