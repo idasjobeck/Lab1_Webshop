@@ -1,5 +1,6 @@
 ﻿@page "/orderconfirmation"
 @using WebshopCore
+@using WebshopCore.Dtos
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @rendermode InteractiveServer
 
@@ -55,7 +56,7 @@
 </div>
 
 @code {
-    private WebshopCore.Dtos.OrderDto? _order;
+    private OrderDto? _order;
     public string Currency { get; set; } = "SEK";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -65,13 +66,13 @@
     }
 
     // will be updated to get order from backend
-    private async Task<WebshopCore.Dtos.OrderDto?> GetOrderAsync() => await LocalStorage.GetItemAsync<WebshopCore.Dtos.OrderDto>("order");
+    private async Task<OrderDto?> GetOrderAsync() => await LocalStorage.GetItemAsync<OrderDto>("order");
 
     private bool IsOrderEmpty() => _order == null;
 
     private async Task ClearOrder()
     {
-        _order = new WebshopCore.Dtos.OrderDto();
+        _order = new OrderDto();
         await LocalStorage.RemoveItemAsync("order");
     }
 
