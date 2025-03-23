@@ -55,16 +55,19 @@
                     {
                         <tr>
                             <td>@product.ProductName</td>
-                            <td class="text-right">@product.Price @Currency</td>
-                            <td><RemoveFromCart Product="product"/></td>
+                            <td class="barlow-semi-condensed-light-italic text-right cart-original-price">@(ShowOriginalPrice(product))</td> @*   @product.Price *@
+                            <td class="text-right @(GetPriceCssClass(product))">@(product.SalePrice ?? product.Price) @Currency</td>
+                            <td class="text-right"><RemoveFromCart Product="product"/></td>
                         </tr>
                     }
                     <tr class="barlow-regular-italic text-right">
+                        <td></td>
                         <td>Shipping *</td>
                         <td>@(_totalPrice > _freeShippingOver ? 0 : _shippingCost) @Currency</td>
                         <td></td>
                     </tr>
                     <tr class="barlow-semibold-italic text-right">
+                        <td></td>
                         <td>Total</td>
                         <td>@_totalPrice @Currency</td>
                         <td></td>
@@ -110,12 +113,16 @@
         return _cart.Count == 0;
     }
 
+    private string GetPriceCssClass(BookDto product) => product.SalePrice != null ? "cart-onsale-price" : "";
+
+    private decimal? ShowOriginalPrice(BookDto product) => product.SalePrice != null ? product.Price : null;
+
     private void CalculateTotalPrice()
     {
         _totalPrice = 0;
 
         foreach (var item in _cart)
-            _totalPrice += item.Price;
+            _totalPrice += item.SalePrice ?? item.Price;
 
         if (_totalPrice <= _freeShippingOver)
             _totalPrice += _shippingCost;

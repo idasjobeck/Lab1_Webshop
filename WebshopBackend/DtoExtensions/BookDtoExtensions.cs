@@ -40,7 +40,7 @@ namespace WebshopBackend.DtoExtensions
             Description = book.Description,
             ImageUrl = book.ImageUrl,
             Price = book.Price,
-            SalePrice = book.SalePercentage == null ? null : book.Price * (1 - book.SalePercentage / 100),
+            SalePrice = book.CalculateSalePrice(),
             AvailableQty = book.AvailableQty
         };
 
@@ -51,6 +51,15 @@ namespace WebshopBackend.DtoExtensions
                 return 0;
             }
             return (int)((1 - salePrice / price) * 100);
+        }
+
+        private static decimal? CalculateSalePrice(this Book book)
+        {
+            if (book.SalePercentage == null)
+            {
+                return null;
+            }
+            return Math.Round(book.Price * (1M - (decimal)book.SalePercentage / 100), 2);
         }
 
         public static string GetProductName(this Book book)

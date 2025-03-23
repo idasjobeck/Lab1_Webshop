@@ -6,7 +6,7 @@
 
 <div class="product-preview">
     <div class="product-preview-content-container">
-        
+
         <div class="product-preview-image">
             <div class="product-soldout-image-overlay @(Product.AvailableQty == 0 ? "" : "hidden")"><p>SOLD<br />OUT</p></div>
             <img src="@(string.IsNullOrEmpty(Product.ImageUrl) ? "/resources/no-image-available.jpg" : Product.ImageUrl)" alt="Image for @Product.ProductName">
@@ -17,7 +17,8 @@
     </div>
     <div class="product-preview-content-container">
         <div class="product-preview-row barlow-semibold product-preview-price">
-            @Product.Price @Currency
+            <p class="product-original-price @(ShowOriginalPrice())">@Product.Price @Currency</p>
+            <p class="@GetPriceCssClass()">@(Product.SalePrice ?? Product.Price) @Currency</p>
         </div>
         <div class="product-preview-row">
             <span>In stock: @Product.AvailableQty</span>
@@ -38,6 +39,9 @@
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var data = await client.GetStringAsync($"/products/{Product.Id}");
         Product = JsonSerializer.Deserialize<BookDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        //StateHasChanged();
     }
+
+    private string GetPriceCssClass() => Product.SalePrice != null ? "product-onsale-price" : "";
+
+    private string ShowOriginalPrice() => Product.SalePrice != null ? "" : "hidden";
 }
