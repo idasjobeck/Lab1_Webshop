@@ -18,6 +18,7 @@ namespace WebshopBackend.DtoExtensions
 
         public static OrderItemDto ToOrderItemDto(this OrderItem orderItem) => new OrderItemDto
         {
+            BookId = orderItem.Book.Id,
             ProductName = orderItem.Book.GetProductName(),
             Quantity = orderItem.Quantity,
             PriceAtPurchase = orderItem.PriceAtPurchase
