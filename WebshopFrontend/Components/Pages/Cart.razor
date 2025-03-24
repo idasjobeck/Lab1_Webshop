@@ -87,7 +87,7 @@
             }
         </div>
         <div class="cart-content-buttons">
-            <button @onclick="ClearCart" disabled="@(IsCartEmpty())">Empty cart</button>
+            <button @onclick="@(() => ClearCart(false))" disabled="@(IsCartEmpty())">Empty cart</button>
             <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button>
         </div>
     </div>
@@ -147,13 +147,15 @@
         _shippingDetails = new ShippingDetailsDto { FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = "" };
     }
 
-    private async Task ClearCart()
+    private async Task ClearCart(bool isCheckout)
     {
-        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
-
-        foreach (var item in _cart)
+        if (!isCheckout)
         {
-            var response = await client.PatchAsync($"/increaseAvailableQty/{item.Book.Id}/{item.Quantity}", null);
+            using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+            foreach (var item in _cart)
+            {
+                var response = await client.PatchAsync($"/increaseAvailableQty/{item.Book.Id}/{item.Quantity}", null);
+            }
         }
 
         _cart.Clear();
@@ -166,7 +168,7 @@
         // generate order and store it in local storage - will be updated to store in database
         await LocalStorage.SetItemAsync("order", GenerateOrder());
         // clear cart
-        await ClearCart();
+        await ClearCart(true);
         // navigate to order confirmation page
         NavigationManager.NavigateTo("/orderconfirmation");
     }
@@ -182,7 +184,7 @@
                 OrderStatus = "Ordered",
                 ShippingPrice = _totalPriceExclShipping > _freeShippingOver ? 0 : _shippingCost,
                 TotalPrice = _totalPrice,
-                OrderItems = _cart //new List<OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
+                OrderItems = _cart
             };
 
         return order;

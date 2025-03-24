@@ -48,7 +48,6 @@
             _cart.Add(orderItem);
         }
 
-        //_cart.Add(book);
         await LocalStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
