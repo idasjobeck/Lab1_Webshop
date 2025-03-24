@@ -35,10 +35,10 @@ namespace WebshopBackend
             var bookEndpoints = new BookEndpoints();
             app.MapGet("/products", (WebshopDbContext context) => bookEndpoints.GetProductsAsync(context));
             app.MapGet("/products/{id}", (int id, WebshopDbContext context) => bookEndpoints.GetProductByIdAsync(id, context));
-            app.MapPatch("/decreaseAvailableQty/{id}",
-                (int id, WebshopDbContext context) => bookEndpoints.DecreaseAvailableQtyAsync(id, context));
-            app.MapPatch("/increaseAvailableQty/{id}",
-                (int id, WebshopDbContext context) => bookEndpoints.IncreaseAvailableQtyAsync(id, context));
+            app.MapPatch("/decreaseAvailableQty/{id}/{amount}",
+                (int id, int amount, WebshopDbContext context) => bookEndpoints.DecreaseAvailableQtyAsync(id, amount, context));
+            app.MapPatch("/increaseAvailableQty/{id}/{amount}",
+                (int id, int amount, WebshopDbContext context) => bookEndpoints.IncreaseAvailableQtyAsync(id, amount, context));
 
 
             app.MapGroup("/account").MapIdentityApi<WebshopUser>();

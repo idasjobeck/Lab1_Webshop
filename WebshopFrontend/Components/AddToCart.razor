@@ -52,7 +52,7 @@
         await LocalStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
-        var response = await client.PatchAsync($"/decreaseAvailableQty/{Product.Id}", null);
+        var response = await client.PatchAsync($"/decreaseAvailableQty/{Product.Id}/{1}", null);
         await OnAddToCart.InvokeAsync();
     }
 }
