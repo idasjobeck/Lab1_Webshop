@@ -454,6 +454,24 @@ p.spaced-paragraph {
         margin-bottom: 10px;
     }
 
+.th-left {
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    font-weight: 600;
+}
+
+.th-center {
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    font-weight: 600;
+}
+
+.th-right {
+    text-align: right;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+    font-weight: 600;
+}
+
 .form-container {
     display: flex;
     flex-direction: column;

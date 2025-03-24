@@ -7,7 +7,7 @@
 <button @onclick="() => AddToCartAsync(Product)" disabled="@ButtonDisabled">Add to cart</button>
 
 @code {
-    private List<BookDto> _cart = new();
+    private List<OrderItemDto> _cart = new();
 
     [Parameter]
     public required BookDto Product { get; set; }
@@ -24,15 +24,31 @@
         StateHasChanged();
     }
 
-    private async Task<List<BookDto>> GetItemsFromCartAsync()
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<BookDto>>("cart") ?? new List<BookDto>();
+        return await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
     }
 
     private async Task AddToCartAsync(BookDto book)
     {
         _cart = await GetItemsFromCartAsync();
-        _cart.Add(book);
+        var orderItem = new OrderItemDto();
+
+        // Check if the product is already in the cart
+        var existingItem = _cart.FirstOrDefault(p => p.Book.Id == book.Id);
+        if (existingItem != null)
+        {
+            existingItem.Quantity++;
+        }
+        else
+        {
+            orderItem.Book = book;
+            orderItem.Quantity = 1;
+            orderItem.PriceAtPurchase = book.SalePrice ?? book.Price;
+            _cart.Add(orderItem);
+        }
+
+        //_cart.Add(book);
         await LocalStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");

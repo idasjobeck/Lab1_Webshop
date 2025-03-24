@@ -51,25 +51,35 @@
             else
             {
                 <table>
-                    @foreach (var product in _cart)
+                    <tr class="barlow-semibold-italic">
+                        <th class="th-left">Item</th>
+                        <th></th>
+                        <th class="th-center">Price</th>
+                        <th class="th-right">Qty</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in _cart)
                     {
                         <tr>
-                            <td>@product.ProductName</td>
-                            <td class="barlow-semi-condensed-light-italic text-right cart-original-price">@(ShowOriginalPrice(product))</td> @*   @product.Price *@
-                            <td class="text-right @(GetPriceCssClass(product))">@(product.SalePrice ?? product.Price) @Currency</td>
-                            <td class="text-right"><RemoveFromCart Product="product"/></td>
+                            <td>@item.Book.ProductName</td>
+                            <td class="barlow-semi-condensed-light-italic text-right cart-original-price">@(GetOriginalPrice(item.Book) * item.Quantity)</td>
+                            <td class="text-right @(GetPriceCssClass(item.Book))">@((item.Book.SalePrice ?? item.Book.Price) * item.Quantity) @Currency</td>
+                            <td class="text-right">(@item.Quantity)</td>
+                            <td class="text-right"><RemoveFromCart Product="item.Book"/></td>
                         </tr>
                     }
                     <tr class="barlow-regular-italic text-right">
                         <td></td>
                         <td>Shipping *</td>
-                        <td>@(_totalPrice > _freeShippingOver ? 0 : _shippingCost) @Currency</td>
+                        <td>@(_totalPriceExclShipping > _freeShippingOver ? 0 : _shippingCost) @Currency</td>
+                        <td></td>
                         <td></td>
                     </tr>
                     <tr class="barlow-semibold-italic text-right">
                         <td></td>
                         <td>Total</td>
                         <td>@_totalPrice @Currency</td>
+                        <td></td>
                         <td></td>
                     </tr>
                 </table>
@@ -85,11 +95,12 @@
 
 
 @code {
-    private List<BookDto> _cart = new();
+    private List<OrderItemDto> _cart = new();
 
     [Parameter]
     public string Currency { get; set; } = "SEK";
 
+    private decimal _totalPriceExclShipping;
     private decimal _totalPrice;
     private readonly decimal _shippingCost = 59;
     private readonly decimal _freeShippingOver = 500;
@@ -103,9 +114,9 @@
         StateHasChanged();
     }
 
-    private async Task<List<BookDto>> GetItemsFromCartAsync()
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<BookDto>>("cart") ?? new List<BookDto>();
+        return await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
     }
 
     private bool IsCartEmpty()
@@ -115,16 +126,19 @@
 
     private string GetPriceCssClass(BookDto product) => product.SalePrice != null ? "cart-onsale-price" : "";
 
-    private decimal? ShowOriginalPrice(BookDto product) => product.SalePrice != null ? product.Price : null;
+    private decimal? GetOriginalPrice(BookDto product) => product.SalePrice != null ? product.Price : null;
 
     private void CalculateTotalPrice()
     {
+        _totalPriceExclShipping = 0;
         _totalPrice = 0;
 
         foreach (var item in _cart)
-            _totalPrice += item.SalePrice ?? item.Price;
+            _totalPriceExclShipping += (item.Book.SalePrice ?? item.Book.Price) * item.Quantity;
 
-        if (_totalPrice <= _freeShippingOver)
+        _totalPrice = _totalPriceExclShipping;
+
+        if (_totalPriceExclShipping <= _freeShippingOver)
             _totalPrice += _shippingCost;
     }
 
@@ -139,7 +153,7 @@
 
         foreach (var item in _cart)
         {
-            var response = await client.PatchAsync($"/increaseAvailableQty/{item.Id}", null);
+            var response = await client.PatchAsync($"/increaseAvailableQty/{item.Book.Id}", null);
         }
 
         _cart.Clear();
@@ -166,9 +180,9 @@
                 OrderDate = DateTime.Now,
                 ShippingDate = null,
                 OrderStatus = "Ordered",
-                ShippingPrice = _totalPrice > _freeShippingOver ? 0 : _shippingCost,
+                ShippingPrice = _totalPriceExclShipping > _freeShippingOver ? 0 : _shippingCost,
                 TotalPrice = _totalPrice,
-                OrderItems = new List<OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
+                OrderItems = _cart //new List<OrderItemDto>() // the list being empty is temporary until the OrderItemDto is updated and saving orders into the database is implemented
             };
 
         return order;

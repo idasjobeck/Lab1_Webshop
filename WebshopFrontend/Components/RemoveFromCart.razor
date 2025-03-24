@@ -8,7 +8,7 @@
 <i class="bi bi-trash3 remove-icon" @onclick="() => RemoveFromCartAsync(Product)"></i>
 
 @code {
-    private List<BookDto> _cart = new();
+    private List<OrderItemDto> _cart = new();
 
     [Parameter]
     public required BookDto Product { get; set; }
@@ -19,9 +19,9 @@
         StateHasChanged();
     }
 
-    private async Task<List<BookDto>> GetItemsFromCartAsync()
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
     {
-        return await LocalStorage.GetItemAsync<List<BookDto>>("cart") ?? new List<BookDto>();
+        return await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
     }
 
     private async Task RemoveFromCartAsync(BookDto product)
@@ -31,9 +31,19 @@
         // not an ideal solution, but it works
         // currently each product is added as a separate item in the cart list, and finding the item to remove it finds the first one and removes it.
         // which means if the same product is added multiple times, the first one will be removed even if you click on the remove button of the second one.
-        var productToRemove = _cart.FirstOrDefault(p => p.Id == product.Id);
+        var productToRemove = _cart.FirstOrDefault(p => p.Book.Id == product.Id);
         if (productToRemove != null)
-            _cart.Remove(productToRemove);
+        {
+            if (productToRemove.Quantity > 1)
+            {
+                productToRemove.Quantity--;
+            }
+            else
+            {
+                _cart.Remove(productToRemove);
+            }
+        }
+           // _cart.Remove(productToRemove);
 
         await LocalStorage.SetItemAsync("cart", _cart);
 

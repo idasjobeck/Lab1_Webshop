@@ -34,20 +34,28 @@
                 @* order contents *@
                 <p class="barlow-semibold">Items Ordered</p>
                 <table>
+                    <tr>
+                        <th class="th-left">Item</th>
+                        <th class="th-center">Price</th>
+                        <th class="th-right">Qty</th>
+                    </tr>
                     @foreach (var product in _order!.OrderItems)
                     {
                         <tr>
                             <td>@product.Book.ProductName</td>
-                            <td class="text-right">@product.PriceAtPurchase @Currency</td>
+                            <td class="text-right">@(product.PriceAtPurchase * product.Quantity) @Currency</td>
+                            <td class="text-right">(@product.Quantity)</td>
                         </tr>
                     }
                     <tr class="barlow-regular-italic text-right">
                         <td>Shipping</td>
                         <td>@_order.ShippingPrice @Currency</td>
+                        <td></td>
                     </tr>
                     <tr class="barlow-semibold-italic text-right">
                         <td>Total</td>
                         <td>@_order.TotalPrice @Currency</td>
+                        <td></td>
                     </tr>
                 </table>
             </div>
@@ -70,6 +78,7 @@
 
     private bool IsOrderEmpty() => _order == null;
 
+    // this will need to be run after the order has been written to the database
     private async Task ClearOrder()
     {
         _order = new OrderDto();
