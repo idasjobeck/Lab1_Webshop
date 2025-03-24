@@ -454,6 +454,38 @@ p.spaced-paragraph {
         margin-bottom: 10px;
     }
 
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    max-width: 350px;
+    margin: 20px auto;
+}
+
+    .form-container input {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+    .form-container button {
+        margin: 10px 0;
+        align-self: center;
+    }
+
+    .form-container a {
+        margin: 10px 0;
+    }
+
+    .form-container h3 {
+        align-self: center;
+    }
+
+    .form-container p {
+        width: 100%;
+        text-align: center;
+    }
+
 footer div.row {
     display: flex;
     flex-direction: row;

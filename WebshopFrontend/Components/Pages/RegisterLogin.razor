@@ -1,0 +1,29 @@
+﻿@page "/register"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject WebshopAuthenticationStateProvider AuthStateProvider
+@rendermode InteractiveServer
+
+<PageTitle>Register new user</PageTitle>
+
+<div class="form-container">
+    <AuthorizeView>
+        <Authorized>
+            <p>Welcome @context.User.Identity?.Name!</p>
+            <p>You are logged in.</p>
+        </Authorized>
+        <NotAuthorized>
+            <Register/>
+            <Login/>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private AuthenticationState? _authState;
+    private string _loginMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _authState = await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+}

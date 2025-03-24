@@ -10,6 +10,12 @@
                     <NavLink class="nav-link" href="@otherMenuItem.Url">@otherMenuItem.Text</NavLink>
                 </li>
             }
+            @if (LoginAvailable)
+            {
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/register">Register/Login</NavLink>
+                </li>
+            }
         </ul>
     </nav>
 </div>
@@ -20,4 +26,7 @@
 
     [Parameter]
     public List<(string Text, string Url)> OtherMenuItems { get; set; } = new();
+
+    [Parameter]
+    public bool LoginAvailable { get; set; } = false;
 }

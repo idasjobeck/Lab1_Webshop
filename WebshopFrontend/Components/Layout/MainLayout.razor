@@ -5,7 +5,7 @@
         <Header HeadingText="Parallel Paths Books" HeadingAlignment="(Header.HorizontalAlignment.left, Header.VerticalAlignment.middle)"/>
     </header>
     <main>
-        <NavMenu StaticMenuItem="@(("Home", ""))" OtherMenuItems="@(new List<(string Text, string Url)> {("Products", "products"), ("About Us", "about"), ("Cart", "cart")})" />
+        <NavMenu StaticMenuItem="@(("Home", ""))" OtherMenuItems="@(new List<(string Text, string Url)> {("Products", "products"), ("About Us", "about"), ("Cart", "cart")})" LoginAvailable="true" />
         <div class="row-main-layout">
             @* <div class="sidebar">
                 Sidebar content, if I'm going to use it.

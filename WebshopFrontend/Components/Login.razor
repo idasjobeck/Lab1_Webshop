@@ -1,0 +1,52 @@
+﻿@* @page "/login" *@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject WebshopAuthenticationStateProvider AuthStateProvider
+@rendermode InteractiveServer
+
+<div class="form-container">
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome @context.User.Identity?.Name!</p>
+        <p>You are logged in.</p>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Login</h3>
+        <form @onsubmit="Signin">
+            <label for="email">Email: </label>
+            <input type="text" id="email" @bind="_email"/>
+            @* <br /> *@
+            <label for="password">Password: </label>
+            <input type="password" id="password" @bind="_password"/>
+            @* <br /> *@
+            <button type="submit">Sign in</button>
+        </form>
+        <p>@_loginMessage</p>
+    </NotAuthorized>
+</AuthorizeView>
+</div>
+
+
+@code {
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+    private bool _isLoggedIn = false;
+    private AuthenticationState? _authState;
+    private string _loginMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _authState = await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+    private async Task Signin()
+    {
+        _isLoggedIn = await AuthStateProvider.LoginAsync(_email, _password);
+
+        if (_isLoggedIn)
+            _loginMessage = "Login successful";
+        else
+            _loginMessage = "Login failed";
+
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,60 @@
+﻿@using System.Text
+@using System.Text.Json
+@rendermode InteractiveServer
+@inject WebshopAuthenticationStateProvider AuthStateProvider
+@inject IHttpClientFactory HttpClientFactory
+
+<PageTitle>Register new user</PageTitle>
+
+<div class="form-container">
+    <h3>Register new user</h3>
+    <form class="@(_successfulRegistration ? "hidden" : "")" @onsubmit="RegisterUser">
+        <label for="email">Email: </label>
+        <input type="text" id="email" @bind="_email" @oninput="@(() =>
+                                                                     {
+                                                                         if (!string.IsNullOrEmpty(_email)) _email = _email.Trim();
+                                                                     })"/>
+        <label for="password">Password: </label>
+        <input type="password" id="password" @bind="_password" @oninput="@(() =>
+                                                                         {
+                                                                             if (!string.IsNullOrEmpty(_password)) _password = _password.Trim();
+                                                                         })"/>
+        <button type="submit">Register</button>
+    </form>
+    <p>@_registrationMessage</p>
+</div>
+
+@code {
+    private string _email = string.Empty;
+    private string _password = string.Empty;
+    private string _registrationMessage = string.Empty;
+    private bool _successfulRegistration;
+
+    private async Task RegisterUser()
+    {
+        if (string.IsNullOrEmpty(_email) || string.IsNullOrEmpty(_password))
+        {
+            _registrationMessage = "Username and password must be provided";
+            return;
+        }
+
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+
+        var content = new StringContent(JsonSerializer.Serialize(new { email = _email, password = _password }), Encoding.UTF8, "application/json");
+
+        var response = await client.PostAsync("/account/register", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _registrationMessage = $"Thank you {_email}! Your registration was successful";
+            _successfulRegistration = true;
+        }
+        else
+        {
+            _registrationMessage = "Registration failed";
+        }
+
+        StateHasChanged();
+    }
+
+}

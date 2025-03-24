@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebshopBackend.ApiEndpoints;
@@ -38,6 +39,15 @@ namespace WebshopBackend
                 (int id, WebshopDbContext context) => bookEndpoints.DecreaseAvailableQtyAsync(id, context));
             app.MapPatch("/increaseAvailableQty/{id}",
                 (int id, WebshopDbContext context) => bookEndpoints.IncreaseAvailableQtyAsync(id, context));
+
+
+            app.MapGroup("/account").MapIdentityApi<WebshopUser>();
+            app.MapGroup("/account").MapGet("/AuthenticatedUser", async (ClaimsPrincipal userPrincipal, WebshopDbContext context) =>
+            {
+                string userId = userPrincipal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var user = await context.Users.FindAsync(userId); //get user from db
+                return user;
+            }).RequireAuthorization();
 
 
             if (app.Environment.IsDevelopment())
