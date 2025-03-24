@@ -27,7 +27,14 @@
     private async Task RemoveFromCartAsync(BookDto product)
     {
         _cart = await GetItemsFromCartAsync();
-        _cart.RemoveAll(p => p.Id == product.Id);
+        
+        // not an ideal solution, but it works
+        // currently each product is added as a separate item in the cart list, and finding the item to remove it finds the first one and removes it.
+        // which means if the same product is added multiple times, the first one will be removed even if you click on the remove button of the second one.
+        var productToRemove = _cart.FirstOrDefault(p => p.Id == product.Id);
+        if (productToRemove != null)
+            _cart.Remove(productToRemove);
+
         await LocalStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
