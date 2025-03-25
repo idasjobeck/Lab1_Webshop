@@ -9,6 +9,7 @@ namespace WebshopCore.Dtos
     public class OrderDto
     {
         public Guid OrderNumber { get; set; }
+        public WebshopUserDto User { get; set; }
         public ShippingDetailsDto ShippingDetails { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime? ShippingDate { get; set; }

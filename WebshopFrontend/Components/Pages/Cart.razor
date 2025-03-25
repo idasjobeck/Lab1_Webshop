@@ -1,7 +1,10 @@
 ﻿@page "/cart"
 @rendermode InteractiveServer
+@using System.Text.Json
 @using WebshopCore
 @using WebshopCore.Dtos
+@using Microsoft.AspNetCore.Components.Authorization
+@inject WebshopAuthenticationStateProvider AuthStateProvider
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
@@ -93,7 +96,6 @@
     </div>
 </div>
 
-
 @code {
     private List<OrderItemDto> _cart = new();
 
@@ -107,22 +109,20 @@
 
     private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = ""};
 
+    private AuthenticationState? _authState;
+    private WebshopUserDto? _loggedInUser;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        _authState = await AuthStateProvider.GetAuthenticationStateAsync();
         _cart = await GetItemsFromCartAsync();
         CalculateTotalPrice();
         StateHasChanged();
     }
 
-    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
-    {
-        return await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
-    }
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
 
-    private bool IsCartEmpty()
-    {
-        return _cart.Count == 0;
-    }
+    private bool IsCartEmpty() => _cart.Count == 0;
 
     private string GetPriceCssClass(BookDto product) => product.SalePrice != null ? "cart-onsale-price" : "";
 
@@ -166,18 +166,26 @@
     private async Task CheckOut()
     {
         // generate order and store it in local storage - will be updated to store in database
-        await LocalStorage.SetItemAsync("order", GenerateOrder());
+        var order = GenerateOrder();
+        await LocalStorage.SetItemAsync("order", order);
+
+        await GetUser();
+
+        // checkout order
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var response = await client.PostAsJsonAsync("/checkout", order);
+
         // clear cart
         await ClearCart(true);
         // navigate to order confirmation page
-        NavigationManager.NavigateTo("/orderconfirmation");
+        NavigationManager.NavigateTo("/orderconfirmation"); //could this take the order number as a parameter? 
+                                                                //and order confirmation page could then get the order from the backend
     }
 
-    private OrderDto GenerateOrder()
-    {
-        var order = new OrderDto
+    private OrderDto GenerateOrder() => new OrderDto
             {
                 OrderNumber = new Guid(),
+                User = _loggedInUser,
                 ShippingDetails = _shippingDetails,
                 OrderDate = DateTime.Now,
                 ShippingDate = null,
@@ -187,6 +195,17 @@
                 OrderItems = _cart
             };
 
-        return order;
+    private async Task GetUser() //this will get the WebshopUserDto object of the user logged in
+    {
+        var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+
+        var response = await client.GetAsync("account/AuthenticatedUser");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var user = JsonSerializer.Deserialize<WebshopUserDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _loggedInUser = user;
+        }
     }
 }
