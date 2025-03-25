@@ -179,21 +179,26 @@
         await ClearCart(true);
         // navigate to order confirmation page
         NavigationManager.NavigateTo("/orderconfirmation"); //could this take the order number as a parameter? 
-                                                                //and order confirmation page could then get the order from the backend
+        //and order confirmation page could then get the order from the backend
     }
 
-    private OrderDto GenerateOrder() => new OrderDto
-            {
-                OrderNumber = new Guid(),
-                User = _loggedInUser,
-                ShippingDetails = _shippingDetails,
-                OrderDate = DateTime.Now,
-                ShippingDate = null,
-                OrderStatus = "Ordered",
-                ShippingPrice = _totalPriceExclShipping > _freeShippingOver ? 0 : _shippingCost,
-                TotalPrice = _totalPrice,
-                OrderItems = _cart
-            };
+    private OrderDto GenerateOrder()
+    {
+        _shippingDetails.User = _loggedInUser;
+
+        return new OrderDto
+        {
+            OrderNumber = new Guid(),
+            User = _loggedInUser,
+            ShippingDetails = _shippingDetails,
+            OrderDate = DateTime.Now,
+            ShippingDate = null,
+            OrderStatus = "Ordered",
+            ShippingPrice = _totalPriceExclShipping > _freeShippingOver ? 0 : _shippingCost,
+            TotalPrice = _totalPrice,
+            OrderItems = _cart
+        };
+    }
 
     private async Task GetUser() //this will get the WebshopUserDto object of the user logged in
     {

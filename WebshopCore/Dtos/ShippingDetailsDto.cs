@@ -33,5 +33,7 @@ namespace WebshopCore.Dtos
 
         [Required(ErrorMessage = "The country field is a required field.")]
         public required string Country { get; set; }
+
+        public WebshopUserDto User { get; set; }
     }
 }

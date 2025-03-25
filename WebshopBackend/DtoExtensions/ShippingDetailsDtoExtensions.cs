@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebshopBackend.Data;
 using WebshopBackend.Models;
 using WebshopCore.Dtos;
 
@@ -6,8 +7,8 @@ namespace WebshopBackend.DtoExtensions
 {
     public static class ShippingDetailsDtoExtensions
     {
-        /*
-        public static ShippingDetails ToShippingDetails(this ShippingDetailsDto shippingDetailsDto) =>
+        
+        public static ShippingDetails ToShippingDetails(this ShippingDetailsDto shippingDetailsDto, WebshopDbContext context) =>
             new ShippingDetails
             {
                 Id = 0,
@@ -17,10 +18,9 @@ namespace WebshopBackend.DtoExtensions
                 ShipAdd2 = shippingDetailsDto.Address2,
                 ShipCity = shippingDetailsDto.City,
                 ShipZip = shippingDetailsDto.Zip,
-                ShipCountry = shippingDetailsDto.Country
-                // need to get webshop user based on who is logged in
+                ShipCountry = shippingDetailsDto.Country,
+                User = context.Users.FirstOrDefault(u => u.Id == shippingDetailsDto.User.Id)!
             };
-        */
 
         public static ShippingDetailsDto ToShippingDetailsDto(this ShippingDetails shippingDetails) =>
             new ShippingDetailsDto
@@ -32,7 +32,8 @@ namespace WebshopBackend.DtoExtensions
                 Address2 = shippingDetails.ShipAdd2,
                 City = shippingDetails.ShipCity,
                 Zip = shippingDetails.ShipZip,
-                Country = shippingDetails.ShipCountry
+                Country = shippingDetails.ShipCountry,
+                User = shippingDetails.User.ToWebshopUserDto()
             };
     }
 }

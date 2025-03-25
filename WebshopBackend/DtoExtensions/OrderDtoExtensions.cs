@@ -1,27 +1,29 @@
-﻿using WebshopBackend.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using WebshopBackend.Data;
+using WebshopBackend.Models;
 using WebshopCore.Dtos;
 
 namespace WebshopBackend.DtoExtensions
 {
     public static class OrderDtoExtensions
     {
-        /*
-        public static Order ToOrder(this OrderDto orderDto) => new Order
+        
+        public static Order ToOrder(this OrderDto orderDto, WebshopDbContext context) => new Order
         {
             Id = 0,
             OrderNumber = orderDto.OrderNumber,
-            // need to get webshop user based on who is logged in
-            ShippingDetails = orderDto.ShippingDetails.ToShippingDetails(), // this extension method also needs to get user based on who is logged in
+            User = context.Users.FirstOrDefault(u => u.Id == orderDto.User.Id)!,
+            ShippingDetails = orderDto.ShippingDetails.ToShippingDetails(context),
             OrderDate = orderDto.OrderDate,
             ShippingDate = orderDto.ShippingDate,
             OrderStatus = orderDto.OrderStatus,
             ShippingPrice = orderDto.ShippingPrice,
             TotalPrice = orderDto.TotalPrice
         };
-        */
+        
 
-        /*
-        public static OrderDto ToOrderDto(this Order order) => new OrderDto
+        
+        public static OrderDto ToOrderDto(this Order order, WebshopDbContext context) => new OrderDto
         {
             OrderNumber = order.OrderNumber,
             ShippingDetails = order.ShippingDetails.ToShippingDetailsDto(),
@@ -30,8 +32,13 @@ namespace WebshopBackend.DtoExtensions
             OrderStatus = order.OrderStatus,
             ShippingPrice = order.ShippingPrice,
             TotalPrice = order.TotalPrice,
-            // need to get order items from database based on order id and change them to order item dtos
+            User = order.User.ToWebshopUserDto(),
+            OrderItems = context.OrderItems
+                .Include(oi => oi.Book)
+                .Where(oi => oi.Order.Id == order.Id)
+                .Select(oi => oi.ToOrderItemDto())
+                .ToList()
         };
-        */
+        
     }
 }
