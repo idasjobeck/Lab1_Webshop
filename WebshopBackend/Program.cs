@@ -59,12 +59,9 @@ namespace WebshopBackend
                 app.UseSwagger();
                 app.UseSwaggerUI();
 
-                //only needed if not using migrations for database
                 using (var scope = app.Services.CreateScope())
                 {
                     var db = scope.ServiceProvider.GetRequiredService<WebshopDbContext>();
-                    db.Database.EnsureDeleted();
-                    db.Database.EnsureCreated();
 
                     //populate database with dummy data
                     var dummyData = new DummyDataForDb(db);
