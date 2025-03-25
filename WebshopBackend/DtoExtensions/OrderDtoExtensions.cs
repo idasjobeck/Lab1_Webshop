@@ -7,7 +7,6 @@ namespace WebshopBackend.DtoExtensions
 {
     public static class OrderDtoExtensions
     {
-        
         public static Order ToOrder(this OrderDto orderDto, WebshopDbContext context) => new Order
         {
             Id = 0,
@@ -18,12 +17,11 @@ namespace WebshopBackend.DtoExtensions
             ShippingDate = orderDto.ShippingDate,
             OrderStatus = orderDto.OrderStatus,
             ShippingPrice = orderDto.ShippingPrice,
-            TotalPrice = orderDto.TotalPrice
+            TotalPrice = orderDto.TotalPrice,
+            OrderItems = orderDto.OrderItems.ToOrderItems()
         };
         
-
-        
-        public static OrderDto ToOrderDto(this Order order, WebshopDbContext context) => new OrderDto
+        public static OrderDto ToOrderDto(this Order order) => new OrderDto
         {
             OrderNumber = order.OrderNumber,
             ShippingDetails = order.ShippingDetails.ToShippingDetailsDto(),
@@ -33,12 +31,7 @@ namespace WebshopBackend.DtoExtensions
             ShippingPrice = order.ShippingPrice,
             TotalPrice = order.TotalPrice,
             User = order.User.ToWebshopUserDto(),
-            OrderItems = context.OrderItems
-                .Include(oi => oi.Book)
-                .Where(oi => oi.Order.Id == order.Id)
-                .Select(oi => oi.ToOrderItemDto())
-                .ToList()
+            OrderItems = order.OrderItems.ToOrderItemsDto()
         };
-        
     }
 }

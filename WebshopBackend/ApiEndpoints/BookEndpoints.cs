@@ -43,6 +43,7 @@ namespace WebshopBackend.ApiEndpoints
             return book!.ToBookDto();
         }
 
+        //PATCH /decreaseAvailableQty/{id}/{amount}
         public async Task DecreaseAvailableQtyAsync(int id, int amount, WebshopDbContext context)
         {
             var book = await context.Books.FindAsync(id);
@@ -57,6 +58,7 @@ namespace WebshopBackend.ApiEndpoints
             }
         }
 
+        //PATCH /increaseAvailableQty/{id}/{amount}
         public async Task IncreaseAvailableQtyAsync(int id, int amount, WebshopDbContext context)
         {
             var book = await context.Books.FindAsync(id);
@@ -65,6 +67,20 @@ namespace WebshopBackend.ApiEndpoints
                 return;
             
             book.AvailableQty += amount;
+            await context.SaveChangesAsync();
+        }
+
+        //POST /checkout
+        public async Task CheckoutAsync(WebshopDbContext context, [FromBody] OrderDto orderDto)
+        {
+            var order = orderDto.ToOrder(context);
+
+            foreach (var orderItem in order.OrderItems)
+            {
+                context.Entry(orderItem.Book).State = EntityState.Unchanged;
+            }
+
+            context.Orders.Add(order);
             await context.SaveChangesAsync();
         }
     }

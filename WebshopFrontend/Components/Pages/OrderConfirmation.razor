@@ -1,4 +1,4 @@
-﻿@page "/orderconfirmation"
+﻿@page "/orderconfirmation/{orderNumber}"
 @using WebshopCore
 @using WebshopCore.Dtos
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
@@ -32,7 +32,7 @@
         <div class="cart-content-row">
             <div class="cart-content">
                 @* order contents *@
-                <p class="barlow-semibold">Items Ordered</p>
+                <p><span class="barlow-semibold">Items Ordered</span> <span class="barlow-regular-italic">[order no. @_order?.OrderNumber]</span></p>
                 <table>
                     <tr>
                         <th class="th-left">Item</th>
@@ -44,7 +44,7 @@
                         <tr>
                             <td>@product.Book.ProductName</td>
                             <td class="text-right">@(product.PriceAtPurchase * product.Quantity) @Currency</td>
-                            <td class="text-right">(@product.Quantity)</td>
+                            <td class="text-right">@product.Quantity</td>
                         </tr>
                     }
                     <tr class="barlow-regular-italic text-right">
@@ -67,9 +67,13 @@
     private OrderDto? _order;
     public string Currency { get; set; } = "SEK";
 
+    [Parameter]
+    public string OrderNumber { get; set; } = string.Empty;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _order = await GetOrderAsync();
+        await ClearOrder();
         StateHasChanged();
     }
 
@@ -78,11 +82,9 @@
 
     private bool IsOrderEmpty() => _order == null;
 
-    // this will need to be run after the order has been written to the database
     private async Task ClearOrder()
     {
         _order = new OrderDto();
         await LocalStorage.RemoveItemAsync("order");
     }
-
 }

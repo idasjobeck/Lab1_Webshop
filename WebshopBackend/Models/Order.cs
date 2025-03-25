@@ -11,5 +11,7 @@
         public required string OrderStatus { get; set; }
         public required decimal ShippingPrice { get; set; }
         public required decimal TotalPrice { get; set; }
+        
+        public List<OrderItem> OrderItems { get; set; }
     }
 }

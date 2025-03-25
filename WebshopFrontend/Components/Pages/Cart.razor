@@ -165,20 +165,17 @@
 
     private async Task CheckOut()
     {
-        // generate order and store it in local storage - will be updated to store in database
+        await GetUser();
+
         var order = GenerateOrder();
         await LocalStorage.SetItemAsync("order", order);
 
-        await GetUser();
-
-        // checkout order
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var response = await client.PostAsJsonAsync("/checkout", order);
 
-        // clear cart
         await ClearCart(true);
-        // navigate to order confirmation page
-        NavigationManager.NavigateTo("/orderconfirmation"); //could this take the order number as a parameter? 
+        
+        NavigationManager.NavigateTo($"/orderconfirmation/{order.OrderNumber.ToString()}"); //could this take the order number as a parameter? 
         //and order confirmation page could then get the order from the backend
     }
 
@@ -188,7 +185,7 @@
 
         return new OrderDto
         {
-            OrderNumber = new Guid(),
+            OrderNumber = Guid.NewGuid(), //new Guid(),
             User = _loggedInUser,
             ShippingDetails = _shippingDetails,
             OrderDate = DateTime.Now,

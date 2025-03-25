@@ -1,11 +1,13 @@
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebshopBackend.ApiEndpoints;
 using WebshopBackend.Data;
 using WebshopBackend.Models;
 using WebshopCore;
+using WebshopCore.Dtos;
 
 namespace WebshopBackend
 {
@@ -39,7 +41,9 @@ namespace WebshopBackend
                 (int id, int amount, WebshopDbContext context) => bookEndpoints.DecreaseAvailableQtyAsync(id, amount, context));
             app.MapPatch("/increaseAvailableQty/{id}/{amount}",
                 (int id, int amount, WebshopDbContext context) => bookEndpoints.IncreaseAvailableQtyAsync(id, amount, context));
-
+            app.MapPost("/checkout",
+                (WebshopDbContext context, [FromBody] OrderDto orderDto) =>
+                    bookEndpoints.CheckoutAsync(context, orderDto));
 
             app.MapGroup("/account").MapIdentityApi<WebshopUser>();
             app.MapGroup("/account").MapGet("/AuthenticatedUser", async (ClaimsPrincipal userPrincipal, WebshopDbContext context) =>
