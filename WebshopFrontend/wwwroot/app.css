@@ -526,6 +526,10 @@ p.spaced-paragraph {
         z-index: 1;
     }
 
+    .tooltip i {
+        color: #333;
+    }
+
     /*.tooltip .tooltiptext {
         width: 200px;
         bottom: 100%;

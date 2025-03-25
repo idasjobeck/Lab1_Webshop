@@ -9,13 +9,13 @@
 <div class="form-container">
     <h3>Register new user</h3>
     <form class="@(_successfulRegistration ? "hidden" : "")" @onsubmit="RegisterUser">
-        <label for="email">Email: </label>
-        <input type="text" id="email" @bind="_email" @oninput="@(() =>
+        <label for="register-email">Email: </label>
+        <input type="text" id="register-email" @bind="_email" @oninput="@(() =>
                                                                      {
                                                                          if (!string.IsNullOrEmpty(_email)) _email = _email.Trim();
                                                                      })"/>
-        <label for="password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
-        <input type="password" id="password" @bind="_password" @oninput="@(() =>
+        <label for="register-password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
+        <input type="password" id="register-password" @bind="_password" @oninput="@(() =>
                                                                          {
                                                                              if (!string.IsNullOrEmpty(_password)) _password = _password.Trim();
                                                                          })"/>

@@ -12,11 +12,11 @@
     <NotAuthorized>
         <h3>Login</h3>
         <form @onsubmit="Signin">
-            <label for="email">Email: </label>
-            <input type="text" id="email" @bind="_email"/>
+            <label for="login-email">Email: </label>
+                <input type="text" id="login-email" @bind="_email" />
             @* <br /> *@
-                <label for="password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
-            <input type="password" id="password" @bind="_password"/>
+                <label for="login-password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
+                <input type="password" id="login-password" @bind="_password" />
             @* <br /> *@
             <button type="submit">Sign in</button>
         </form>
