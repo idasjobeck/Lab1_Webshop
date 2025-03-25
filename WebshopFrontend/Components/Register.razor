@@ -14,7 +14,7 @@
                                                                      {
                                                                          if (!string.IsNullOrEmpty(_email)) _email = _email.Trim();
                                                                      })"/>
-        <label for="password">Password: </label>
+        <label for="password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
         <input type="password" id="password" @bind="_password" @oninput="@(() =>
                                                                          {
                                                                              if (!string.IsNullOrEmpty(_password)) _password = _password.Trim();
@@ -29,6 +29,7 @@
     private string _password = string.Empty;
     private string _registrationMessage = string.Empty;
     private bool _successfulRegistration;
+    public string PasswordCriteria = "Passwords must have at least one non alphanumeric character, at least one digit ('0'-'9'), and at least one uppercase ('A'-'Z').";
 
     private async Task RegisterUser()
     {

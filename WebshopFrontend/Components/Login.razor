@@ -15,7 +15,7 @@
             <label for="email">Email: </label>
             <input type="text" id="email" @bind="_email"/>
             @* <br /> *@
-            <label for="password">Password: </label>
+                <label for="password">Password: </label><div class="tooltip"><i class="bi bi-question-circle"></i><span class="tooltiptext">@PasswordCriteria</span></div>
             <input type="password" id="password" @bind="_password"/>
             @* <br /> *@
             <button type="submit">Sign in</button>
@@ -32,6 +32,8 @@
     private bool _isLoggedIn = false;
     private AuthenticationState? _authState;
     private string _loginMessage = string.Empty;
+
+    public string PasswordCriteria = "Passwords must have at least one non alphanumeric character, at least one digit ('0'-'9'), and at least one uppercase ('A'-'Z').";
 
     protected override async Task OnInitializedAsync()
     {
