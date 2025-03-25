@@ -27,7 +27,6 @@ namespace WebshopBackend.DtoExtensions
             {
                 FirstName = shippingDetails.ShipFirstName,
                 LastName = shippingDetails.ShipLastName,
-                Email = shippingDetails.User.Email!, // will this work?
                 Address1 = shippingDetails.ShipAdd1,
                 Address2 = shippingDetails.ShipAdd2,
                 City = shippingDetails.ShipCity,

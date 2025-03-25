@@ -17,10 +17,6 @@ namespace WebshopCore.Dtos
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 50 characters.")]
         public required string LastName { get; set; }
 
-        [Required(ErrorMessage = "The email field is a required field.")]
-        [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", ErrorMessage = "The email entered must be in a valid format.")]
-        public required string Email { get; set; }
-
         [Required(ErrorMessage = "The address field is a required field.")]
         public required string Address1 { get; set; }
         public string? Address2 { get; set; }

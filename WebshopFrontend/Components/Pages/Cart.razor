@@ -23,9 +23,6 @@
             <label for="lastname" class="barlow-semibold">Last name</label><i> *</i><br />
             <InputText id="lastname" @bind-Value="_shippingDetails.LastName" placeholder="LastName" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.LastName)" /></span>
-            <label for="email" class="barlow-semibold">Email</label><i> *</i><br />
-            <InputText id="email" @bind-Value="_shippingDetails.Email" placeholder="name@email.com" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Email)" /></span>
             <label for="address1" class="barlow-semibold">Address row 1</label><i> *</i><br />
             <InputText id="address1" @bind-Value="_shippingDetails.Address1" placeholder="Address row 1" />
             <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Address1)" /></span>
@@ -107,7 +104,7 @@
     private readonly decimal _shippingCost = 59;
     private readonly decimal _freeShippingOver = 500;
 
-    private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = ""};
+    private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Address1 = "", City = "", Zip = "", Country = ""};
 
     private AuthenticationState? _authState;
     private WebshopUserDto? _loggedInUser;
@@ -144,7 +141,7 @@
 
     private void Reset()
     {
-        _shippingDetails = new ShippingDetailsDto { FirstName = "", LastName = "", Email = "", Address1 = "", City = "", Zip = "", Country = "" };
+        _shippingDetails = new ShippingDetailsDto { FirstName = "", LastName = "", Address1 = "", City = "", Zip = "", Country = "" };
     }
 
     private async Task ClearCart(bool isCheckout)

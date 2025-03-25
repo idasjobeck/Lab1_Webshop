@@ -18,8 +18,7 @@
         <div class="order-address">
             @* delivery address etc. *@
             <p class="barlow-semibold">Delivery Details</p>
-            <p><span class="barlow-semibold">Name:</span> @_order?.ShippingDetails.FirstName @_order?.ShippingDetails.LastName</p>
-            <p><span class="barlow-semibold">Email:</span> @_order?.ShippingDetails.Email</p>
+            <><span class="barlow-semibold">Name:</span> @_order?.ShippingDetails.FirstName @_order?.ShippingDetails.LastName</>
             <p class="barlow-semibold">Address:</p>
             <p>
                 @_order?.ShippingDetails.Address1<br />
@@ -73,7 +72,6 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _order = await GetOrderAsync();
-        await ClearOrder();
         StateHasChanged();
     }
 
