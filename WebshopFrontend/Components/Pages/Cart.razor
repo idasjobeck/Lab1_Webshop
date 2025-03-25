@@ -13,32 +13,41 @@
 
 <div class="cart-main-row">
     <div class="cart-address">
-        @* form for address etc. *@
-        <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
-        <EditForm id="address-form" Model="@_shippingDetails" OnValidSubmit="CheckOut">
-            <DataAnnotationsValidator />
-            <label for="firstname" class="barlow-semibold">First name</label><i> *</i><br />
-            <InputText id="firstname" @bind-Value="_shippingDetails.FirstName" placeholder="FirstName" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.FirstName)" /></span>
-            <label for="lastname" class="barlow-semibold">Last name</label><i> *</i><br />
-            <InputText id="lastname" @bind-Value="_shippingDetails.LastName" placeholder="LastName" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.LastName)" /></span>
-            <label for="address1" class="barlow-semibold">Address row 1</label><i> *</i><br />
-            <InputText id="address1" @bind-Value="_shippingDetails.Address1" placeholder="Address row 1" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Address1)" /></span>
-            <label for="address2" class="barlow-semibold">Address row 2 (optional)</label><br />
-            <InputText id="address2" @bind-Value="_shippingDetails.Address2" placeholder="Address row 2 (optional)" />
-            <label for="city" class="barlow-semibold">City</label><i> *</i><br />
-            <InputText id="city" @bind-Value="_shippingDetails.City" placeholder="City" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.City)" /></span>
-            <label for="zip" class="barlow-semibold">Zip</label><i> *</i><br />
-            <InputText id="zip" @bind-Value="_shippingDetails.Zip" placeholder="Zip code" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Zip)" /></span>
-            <label for="country" class="barlow-semibold">Country</label><i> *</i><br />
-            <InputText id="country" @bind-Value="_shippingDetails.Country" placeholder="Country" />
-            <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Country)" /></span>
-            <button type="reset" @onclick="Reset">Reset</button>
-        </EditForm>
+        <AuthorizeView>
+            <Authorized>
+                @* form for address etc. *@
+                 <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
+                <EditForm Context="formContext" id="address-form" Model="@_shippingDetails" OnValidSubmit="CheckOut">
+                    <DataAnnotationsValidator/>
+                    <label for="firstname" class="barlow-semibold">First name</label><i> *</i><br/>
+                    <InputText id="firstname" @bind-Value="_shippingDetails.FirstName" placeholder="FirstName"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.FirstName)"/></span>
+                    <label for="lastname" class="barlow-semibold">Last name</label><i> *</i><br/>
+                    <InputText id="lastname" @bind-Value="_shippingDetails.LastName" placeholder="LastName"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.LastName)"/></span>
+                    <label for="address1" class="barlow-semibold">Address row 1</label><i> *</i><br/>
+                    <InputText id="address1" @bind-Value="_shippingDetails.Address1" placeholder="Address row 1"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Address1)"/></span>
+                    <label for="address2" class="barlow-semibold">Address row 2 (optional)</label><br/>
+                    <InputText id="address2" @bind-Value="_shippingDetails.Address2" placeholder="Address row 2 (optional)"/>
+                    <label for="city" class="barlow-semibold">City</label><i> *</i><br/>
+                    <InputText id="city" @bind-Value="_shippingDetails.City" placeholder="City"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.City)"/></span>
+                    <label for="zip" class="barlow-semibold">Zip</label><i> *</i><br/>
+                    <InputText id="zip" @bind-Value="_shippingDetails.Zip" placeholder="Zip code"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Zip)"/></span>
+                    <label for="country" class="barlow-semibold">Country</label><i> *</i><br/>
+                    <InputText id="country" @bind-Value="_shippingDetails.Country" placeholder="Country"/>
+                    <span class="barlow-semi-condensed-light-italic"><ValidationMessage For="@(() => _shippingDetails.Country)"/></span>
+                    <button type="reset" @onclick="Reset">Reset</button>
+                </EditForm>
+            </Authorized>
+            <NotAuthorized>
+                <p>Please log in to be able to checkout.</p>
+                <Login />
+            </NotAuthorized>
+        </AuthorizeView>
+        
     </div>
     <div class="cart-content-row">
         <div class="cart-content">
@@ -88,7 +97,11 @@
         </div>
         <div class="cart-content-buttons">
             <button @onclick="@(() => ClearCart(false))" disabled="@(IsCartEmpty())">Empty cart</button>
-            <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button>
+            <AuthorizeView>
+                <Authorized>
+                    <button type="submit" form="address-form" disabled="@(IsCartEmpty())">Checkout</button>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </div>
