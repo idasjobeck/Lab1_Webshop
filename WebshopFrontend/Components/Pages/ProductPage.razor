@@ -33,9 +33,11 @@
                 <div class="product-page-content-container">
                     <div class="product-preview-row">
                         <div class="product-preview-row barlow-semibold product-page-price">
-                            <p class="product-original-price @(ShowOriginalPrice())">@Product.Price @Currency</p>
-                            <p class="@GetPriceCssClass()">@(Product.SalePrice ?? Product.Price) @Currency</p>
-                            @* @Product.Price @Currency *@
+                            <p class="product-original-price @(ShowOriginalPrice())">@_localPrice @Currency</p>
+                            <p class="@GetPriceCssClass()">@(_localSalePrice ?? _localPrice) @Currency</p>
+                        </div>
+                        <div class="product-preview-row product-page-currency">
+                            <CurrencySelector OnCurrencyChanged="HandleCurrencyChanged" BaseCurrency="@_baseCurrency" Message="Please note, all purchases will be billed in SEK. The currency selected above is intended to provide a guideline for what the price is likely to be in your selected currency." />
                         </div>
                         <div class="product-preview-row">
                             <span>In stock: @Product.AvailableQty</span>
@@ -61,9 +63,14 @@ else
 
     public required BookDto? Product { get; set; }
 
+    private readonly string _baseCurrency = "SEK";
+    private decimal _localPrice;
+    private decimal? _localSalePrice;
+
     protected override async Task OnInitializedAsync()
     {
         await FetchDataById();
+        SetLocalPriceVariables();
         StateHasChanged();
     }
 
@@ -79,4 +86,24 @@ else
     private string GetPriceCssClass() => Product?.SalePrice != null ? "product-onsale-price" : "";
 
     private string ShowOriginalPrice() => Product?.SalePrice != null ? "" : "hidden";
+
+    private void SetLocalPriceVariables()
+    {
+        _localPrice = Product!.Price;
+        _localSalePrice = Product.SalePrice;
+    }
+
+    private void HandleCurrencyChanged((string currency, decimal exchangeRate) args)
+    {
+        SetLocalPriceVariables();
+
+        //calculate price based on exchange rate
+        _localPrice = Math.Round(_localPrice * args.exchangeRate, 2);
+        if (_localSalePrice != null)
+            _localSalePrice = Math.Round((decimal)_localSalePrice * args.exchangeRate, 2);
+
+        Currency = args.currency;
+
+        StateHasChanged();
+    }
 }

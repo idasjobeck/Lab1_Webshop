@@ -319,6 +319,15 @@ li.nav-item:hover {
     margin-bottom: 5px;
 }
 
+.product-page-currency {
+    justify-content: end;
+    margin-bottom: 5px;
+}
+
+.product-page-currency p {
+    text-align: end;
+}
+
 
 .product-soldout-image-overlay {
     position: absolute;
@@ -507,7 +516,6 @@ p.spaced-paragraph {
 .tooltip {
     position: relative;
     display: inline-block;
-    /*border-bottom: 1px dotted black;*/ /* If you want dots under the hoverable text */
 }
 
     .tooltip .tooltiptext {
@@ -518,7 +526,6 @@ p.spaced-paragraph {
         text-align: center;
         padding: 5px 0;
         border-radius: 6px;
-        /* Position the tooltip text - see examples below! */
         position: absolute;
         bottom: 100%;
         left: 50%;
@@ -529,13 +536,6 @@ p.spaced-paragraph {
     .tooltip i {
         color: #333;
     }
-
-    /*.tooltip .tooltiptext {
-        width: 200px;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -10px;*/ /* Use half of the width (120/2 = 60), to center the tooltip */
-    /*}*/
 
     .tooltip:hover .tooltiptext {
         visibility: visible;

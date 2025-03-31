@@ -1,0 +1,47 @@
+﻿@using System.Text.Json
+@using WebshopCore.Dtos
+@rendermode InteractiveServer
+@inject IHttpClientFactory HttpClientFactory
+
+<div>
+    <p>
+        Select currency*:
+        <select name="selected-currency" @bind:get="SelectedCurrency" @bind:set="CurrencyChanged">
+            @*   *@
+            <option value="@BaseCurrency">@BaseCurrency</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="USD">USD</option>
+        </select>
+    </p>
+    <p class="barlow-semi-condensed-light-italic @(GetMessageCssClass())">@Message</p>
+</div>
+
+@code {
+    [Parameter]
+    public string BaseCurrency { get; set; }
+
+    [Parameter]
+    public string Message { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<(string selectedCurrency, decimal conversionRate)> OnCurrencyChanged { get; set; }
+
+    public string SelectedCurrency { get; set; }
+
+    private async Task CurrencyChanged(string selectedItem)
+    {
+        SelectedCurrency = selectedItem;
+        //get exchange rate for the selected currency, based on the base currency
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var data = await client.GetStringAsync($"/ExchangeRate/{BaseCurrency}/{SelectedCurrency}");
+        var exchangeRate = JsonSerializer.Deserialize<ExchangeRateDto>(data, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        await OnCurrencyChanged.InvokeAsync((SelectedCurrency, exchangeRate.ConversionRate));
+    }
+
+    private string GetMessageCssClass()
+    {
+        return string.IsNullOrEmpty(Message) ? "hidden" : "";
+    }
+
+}

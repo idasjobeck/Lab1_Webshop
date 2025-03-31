@@ -32,6 +32,8 @@ namespace WebshopBackend
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Configuration.AddUserSecrets<Program>();
+
             var app = builder.Build();
 
             var bookEndpoints = new BookEndpoints();
@@ -44,6 +46,10 @@ namespace WebshopBackend
             app.MapPost("/checkout",
                 (WebshopDbContext context, [FromBody] OrderDto orderDto) =>
                     bookEndpoints.CheckoutAsync(context, orderDto));
+
+            var exchangeRateEndpoints = new ExchangeRateEndpoints();
+            app.MapGet("/ExchangeRate/{BaseCurrency}/{NewCurrency}", (string baseCurrency, string newCurrency, IConfiguration configuration) => 
+                exchangeRateEndpoints.GetExchangeRateAsync(baseCurrency, newCurrency, configuration));
 
             app.MapGroup("/account").MapIdentityApi<WebshopUser>();
             app.MapGroup("/account").MapGet("/AuthenticatedUser", async (ClaimsPrincipal userPrincipal, WebshopDbContext context) =>
