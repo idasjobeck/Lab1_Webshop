@@ -1,5 +1,6 @@
 using System.Net;
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using WebshopFrontend.Components;
@@ -34,6 +35,7 @@ public class Program
         builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<WebshopAuthenticationStateProvider>());
 
         builder.Services.AddBlazoredLocalStorage();
+        builder.Services.AddBlazoredSessionStorage();
 
         var app = builder.Build();
 

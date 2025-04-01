@@ -8,6 +8,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @inject IHttpClientFactory HttpClientFactory
 @inject NavigationManager NavigationManager
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 <PageTitle>Cart</PageTitle>
 
@@ -16,7 +17,7 @@
         <AuthorizeView>
             <Authorized>
                 @* form for address etc. *@
-                 <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
+                <p class="barlow-semi-condensed-light-italic">Fields noted with <i>*</i> are mandatory fields.</p>
                 <EditForm Context="formContext" id="address-form" Model="@_shippingDetails" OnValidSubmit="CheckOut">
                     <DataAnnotationsValidator/>
                     <label for="firstname" class="barlow-semibold">First name</label><i> *</i><br/>
@@ -47,7 +48,7 @@
                 <Login />
             </NotAuthorized>
         </AuthorizeView>
-        
+
     </div>
     <div class="cart-content-row">
         <div class="cart-content">
@@ -130,7 +131,8 @@
         StateHasChanged();
     }
 
-    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => 
+        await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
 
     private bool IsCartEmpty() => _cart.Count == 0;
 
@@ -169,7 +171,7 @@
         }
 
         _cart.Clear();
-        await LocalStorage.RemoveItemAsync("cart");
+        await SessionStorage.RemoveItemAsync("cart");
         StateHasChanged();
     }
 
@@ -195,7 +197,7 @@
 
         return new OrderDto
         {
-            OrderNumber = Guid.NewGuid(), //new Guid(),
+            OrderNumber = Guid.NewGuid(),
             User = _loggedInUser,
             ShippingDetails = _shippingDetails,
             OrderDate = DateTime.Now,

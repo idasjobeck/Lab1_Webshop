@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 @inject IHttpClientFactory HttpClientFactory
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 <button @onclick="() => AddToCartAsync(Product)" disabled="@ButtonDisabled">Add to cart</button>
 
@@ -24,10 +25,8 @@
         StateHasChanged();
     }
 
-    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
-    {
-        return await LocalStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
-    }
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => 
+        await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
 
     private async Task AddToCartAsync(BookDto book)
     {
@@ -48,7 +47,7 @@
             _cart.Add(orderItem);
         }
 
-        await LocalStorage.SetItemAsync("cart", _cart);
+        await SessionStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var response = await client.PatchAsync($"/decreaseAvailableQty/{Product.Id}/{1}", null);
