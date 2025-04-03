@@ -120,12 +120,10 @@
 
     private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Address1 = "", City = "", Zip = "", Country = ""};
 
-    private AuthenticationState? _authState;
     private WebshopUserDto? _loggedInUser;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _authState = await AuthStateProvider.GetAuthenticationStateAsync();
         _cart = await GetItemsFromCartAsync();
         CalculateTotalPrice();
         StateHasChanged();
@@ -178,6 +176,13 @@
     private async Task CheckOut()
     {
         await GetUser();
+
+        // this will refresh the page if the user has been automatically logged out
+        if (_loggedInUser == null)
+        {
+            NavigationManager.NavigateTo(NavigationManager.Uri, true);
+            return; 
+        }
 
         var order = GenerateOrder();
         await LocalStorage.SetItemAsync("order", order);
