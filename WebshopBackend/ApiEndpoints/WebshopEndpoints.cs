@@ -115,5 +115,15 @@ namespace WebshopBackend.ApiEndpoints
             await context.SaveChangesAsync();
         }
 
+        //DELETE /cart/{userId}
+        public async Task DeleteCartAsync(string userId, WebshopDbContext context)
+        {
+            var cart = await context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null)
+                return;
+            context.Carts.Remove(cart);
+            await context.SaveChangesAsync();
+        }
+
     }
 }

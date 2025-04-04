@@ -51,6 +51,7 @@ namespace WebshopBackend
                 webshopEndpoints.AddCartAsync(context, cartDto));
             app.MapPatch("/cart/{userId}", (string userId, WebshopDbContext context, [FromBody] CartDto cartDto) => 
                 webshopEndpoints.UpdateCartAsync(userId, context, cartDto));
+            app.MapDelete("/cart/{userId}", (string userId, WebshopDbContext context) => webshopEndpoints.DeleteCartAsync(userId, context));
 
             var exchangeRateEndpoints = new ExchangeRateEndpoints();
             app.MapGet("/ExchangeRate/{BaseCurrency}/{NewCurrency}", (string baseCurrency, string newCurrency, IConfiguration configuration) => 
