@@ -14,6 +14,9 @@
     [Parameter]
     public required BookDto Product { get; set; }
 
+    [Parameter]
+    public EventCallback OnRemoveFromCart { get; set; }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _cart = await GetItemsFromCartAsync();
@@ -44,5 +47,6 @@
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
         var response = await client.PatchAsync($"/increaseAvailableQty/{Product.Id}/{1}", null);
+        await OnRemoveFromCart.InvokeAsync();
     }
 }

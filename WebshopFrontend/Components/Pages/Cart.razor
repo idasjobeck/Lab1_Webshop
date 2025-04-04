@@ -75,7 +75,7 @@
                             <td class="barlow-semi-condensed-light-italic text-right cart-original-price">@(GetOriginalPrice(item.Book) * item.Quantity)</td>
                             <td class="text-right @(GetPriceCssClass(item.Book))">@((item.Book.SalePrice ?? item.Book.Price) * item.Quantity) @Currency</td>
                             <td class="text-right">(@item.Quantity)</td>
-                            <td class="text-right"><RemoveFromCart Product="item.Book"/></td>
+                            <td class="text-right"><RemoveFromCart OnRemoveFromCart="HandleOnRemoveFromCart" Product="item.Book" /></td>
                         </tr>
                     }
                     <tr class="barlow-regular-italic text-right">
@@ -124,9 +124,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _cart = await GetItemsFromCartAsync();
-        CalculateTotalPrice();
-        StateHasChanged();
+        if (firstRender)
+        {
+            _cart = await GetItemsFromCartAsync();
+            CalculateTotalPrice();
+            StateHasChanged();
+        }
     }
 
     private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => 
@@ -191,7 +194,7 @@
         var response = await client.PostAsJsonAsync("/checkout", order);
 
         await ClearCart(true);
-        
+
         NavigationManager.NavigateTo($"/orderconfirmation/{order.OrderNumber.ToString()}"); //could this take the order number as a parameter? 
         //and order confirmation page could then get the order from the backend
     }
@@ -226,5 +229,12 @@
             var user = JsonSerializer.Deserialize<WebshopUserDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             _loggedInUser = user;
         }
+    }
+
+    private async Task HandleOnRemoveFromCart()
+    {
+        _cart = await GetItemsFromCartAsync();
+        CalculateTotalPrice();
+        StateHasChanged();
     }
 }
