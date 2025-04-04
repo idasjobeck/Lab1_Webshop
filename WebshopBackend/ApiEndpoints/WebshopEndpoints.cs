@@ -7,7 +7,7 @@ using WebshopCore.Dtos;
 
 namespace WebshopBackend.ApiEndpoints
 {
-    public class BookEndpoints
+    public class WebshopEndpoints
     {
         //GET /products
         public async Task<List<BookDto>> GetProductsAsync(WebshopDbContext context)

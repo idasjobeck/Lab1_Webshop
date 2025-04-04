@@ -36,16 +36,16 @@ namespace WebshopBackend
 
             var app = builder.Build();
 
-            var bookEndpoints = new BookEndpoints();
-            app.MapGet("/products", (WebshopDbContext context) => bookEndpoints.GetProductsAsync(context));
-            app.MapGet("/products/{id}", (int id, WebshopDbContext context) => bookEndpoints.GetProductByIdAsync(id, context));
+            var webshopEndpoints = new WebshopEndpoints();
+            app.MapGet("/products", (WebshopDbContext context) => webshopEndpoints.GetProductsAsync(context));
+            app.MapGet("/products/{id}", (int id, WebshopDbContext context) => webshopEndpoints.GetProductByIdAsync(id, context));
             app.MapPatch("/decreaseAvailableQty/{id}/{amount}",
-                (int id, int amount, WebshopDbContext context) => bookEndpoints.DecreaseAvailableQtyAsync(id, amount, context));
+                (int id, int amount, WebshopDbContext context) => webshopEndpoints.DecreaseAvailableQtyAsync(id, amount, context));
             app.MapPatch("/increaseAvailableQty/{id}/{amount}",
-                (int id, int amount, WebshopDbContext context) => bookEndpoints.IncreaseAvailableQtyAsync(id, amount, context));
+                (int id, int amount, WebshopDbContext context) => webshopEndpoints.IncreaseAvailableQtyAsync(id, amount, context));
             app.MapPost("/checkout",
                 (WebshopDbContext context, [FromBody] OrderDto orderDto) =>
-                    bookEndpoints.CheckoutAsync(context, orderDto));
+                    webshopEndpoints.CheckoutAsync(context, orderDto));
 
             var exchangeRateEndpoints = new ExchangeRateEndpoints();
             app.MapGet("/ExchangeRate/{BaseCurrency}/{NewCurrency}", (string baseCurrency, string newCurrency, IConfiguration configuration) => 
