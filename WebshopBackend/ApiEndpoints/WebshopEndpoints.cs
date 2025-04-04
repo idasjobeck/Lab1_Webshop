@@ -83,5 +83,37 @@ namespace WebshopBackend.ApiEndpoints
             context.Orders.Add(order);
             await context.SaveChangesAsync();
         }
+
+        //GET /cart/{userId}
+        public async Task<CartDto?> GetCartAsync(string userId, WebshopDbContext context)
+        {
+            var cart = await context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null)
+                return null;
+
+            return cart.ToCartDto();
+        }
+
+        //POST /cart
+        public async Task AddCartAsync(WebshopDbContext context, [FromBody] CartDto cartDto)
+        {
+            var cart = cartDto.ToCart();
+            context.Carts.Add(cart);
+            await context.SaveChangesAsync();
+        }
+
+        //PATCH /cart/{userId}
+        public async Task UpdateCartAsync(string userId, WebshopDbContext context, [FromBody] CartDto cartDto)
+        {
+            var cart = await context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null)
+                return;
+
+            cart.JsonCart = cartDto.JsonCart;
+            await context.SaveChangesAsync();
+        }
+
     }
 }

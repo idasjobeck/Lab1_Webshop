@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WebshopBackend.ApiEndpoints;
 using WebshopBackend.Data;
@@ -43,9 +44,13 @@ namespace WebshopBackend
                 (int id, int amount, WebshopDbContext context) => webshopEndpoints.DecreaseAvailableQtyAsync(id, amount, context));
             app.MapPatch("/increaseAvailableQty/{id}/{amount}",
                 (int id, int amount, WebshopDbContext context) => webshopEndpoints.IncreaseAvailableQtyAsync(id, amount, context));
-            app.MapPost("/checkout",
-                (WebshopDbContext context, [FromBody] OrderDto orderDto) =>
-                    webshopEndpoints.CheckoutAsync(context, orderDto));
+            app.MapPost("/checkout", (WebshopDbContext context, [FromBody] OrderDto orderDto) =>
+                webshopEndpoints.CheckoutAsync(context, orderDto));
+            app.MapGet("/cart/{userId}", (string userId, WebshopDbContext context) => webshopEndpoints.GetCartAsync(userId, context));
+            app.MapPost("/cart", (WebshopDbContext context, [FromBody] CartDto cartDto) =>
+                webshopEndpoints.AddCartAsync(context, cartDto));
+            app.MapPatch("/cart/{userId}", (string userId, WebshopDbContext context, [FromBody] CartDto cartDto) => 
+                webshopEndpoints.UpdateCartAsync(userId, context, cartDto));
 
             var exchangeRateEndpoints = new ExchangeRateEndpoints();
             app.MapGet("/ExchangeRate/{BaseCurrency}/{NewCurrency}", (string baseCurrency, string newCurrency, IConfiguration configuration) => 
