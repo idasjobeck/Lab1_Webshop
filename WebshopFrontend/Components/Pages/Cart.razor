@@ -45,7 +45,7 @@
             </Authorized>
             <NotAuthorized>
                 <p>Please log in to be able to checkout.</p>
-                <Login />
+                <Login OnUserLogin="HandleUserLoggedIn" />
             </NotAuthorized>
         </AuthorizeView>
 
@@ -115,12 +115,13 @@
 
     private decimal _totalPriceExclShipping;
     private decimal _totalPrice;
-    private readonly decimal _shippingCost = 59;
-    private readonly decimal _freeShippingOver = 500;
+    private readonly decimal _shippingCost = 59.00m;
+    private readonly decimal _freeShippingOver = 500.00m;
 
     private ShippingDetailsDto _shippingDetails = new ShippingDetailsDto {FirstName = "", LastName = "", Address1 = "", City = "", Zip = "", Country = ""};
 
     private WebshopUserDto? _loggedInUser;
+    private bool _haveMergedCarts;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -132,8 +133,17 @@
         }
     }
 
-    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => 
-        await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
+    {
+        await GetUser();
+
+        //if user is logged in, check for cart in database
+        if (_loggedInUser != null)
+            return await GetCartFromDb();
+
+        //else check for cart in session storage
+        return await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+    } 
 
     private bool IsCartEmpty() => _cart.Count == 0;
 
@@ -173,6 +183,12 @@
 
         _cart.Clear();
         await SessionStorage.RemoveItemAsync("cart");
+        //remove cart from database if user is logged in
+        if (_loggedInUser != null)
+        {
+            using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+            await client.DeleteAsync($"/cart/{_loggedInUser.Id}");
+        }
         StateHasChanged();
     }
 
@@ -201,12 +217,12 @@
 
     private OrderDto GenerateOrder()
     {
-        _shippingDetails.User = _loggedInUser;
+        _shippingDetails.User = _loggedInUser!;
 
         return new OrderDto
         {
             OrderNumber = Guid.NewGuid(),
-            User = _loggedInUser,
+            User = _loggedInUser!,
             ShippingDetails = _shippingDetails,
             OrderDate = DateTime.Now,
             ShippingDate = null,
@@ -231,10 +247,80 @@
         }
     }
 
+    private async Task<List<OrderItemDto>> GetCartFromDb()
+    {
+        using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+        var json = await client.GetStringAsync($"/cart/{_loggedInUser!.Id}");
+
+        if (json == "null")
+            return await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+
+        var cartDto = JsonSerializer.Deserialize<CartDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return JsonSerializer.Deserialize<List<OrderItemDto>>(cartDto!.JsonCart, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OrderItemDto>();
+    }
+
     private async Task HandleOnRemoveFromCart()
     {
         _cart = await GetItemsFromCartAsync();
         CalculateTotalPrice();
         StateHasChanged();
+    }
+
+    private async Task HandleUserLoggedIn()
+    {
+        //if _cart is not empty, and carts haven't already been merged, merge the carts
+        if (_cart.Count > 0 && !_haveMergedCarts)
+        {
+            //get the user
+            await GetUser();
+
+            //get the cart from the database
+            var cartFromDb = await GetCartFromDb();
+            if (cartFromDb.Count == 0)
+            {
+                //if the cart from the database is empty, do nothing apart from re-rendering the page
+                StateHasChanged();
+            }
+            else
+            {
+                //merge the carts
+                foreach (var item in cartFromDb)
+                {
+                    var existingItem = _cart.FirstOrDefault(p => p.Book.Id == item.Book.Id);
+
+                    if (existingItem != null)
+                        existingItem.Quantity += item.Quantity;
+                    else
+                        _cart.Add(item);
+                }
+
+                await SessionStorage.SetItemAsync("cart", _cart);
+
+                using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+                var cartDto = new CartDto
+                {
+                    UserId = _loggedInUser!.Id,
+                    JsonCart = JsonSerializer.Serialize(_cart)
+                };
+                await client.PatchAsJsonAsync($"/cart/{_loggedInUser.Id}", cartDto);
+
+                _haveMergedCarts = true;
+                await SessionStorage.SetItemAsync("cartMerged", _haveMergedCarts);
+                CalculateTotalPrice();
+                // StateHasChanged();
+            }
+        }
+        else if(_cart.Count == 0)
+        {
+            //if _cart is empty and the user is logged in, get the cart from the database (if it exists, or get an empty cart if it doesn't)
+            await GetUser();
+            _cart = await GetCartFromDb();
+            CalculateTotalPrice();
+        }
+        else
+        {
+            //just re-render the page
+            StateHasChanged();
+        }
     }
 }

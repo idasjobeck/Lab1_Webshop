@@ -33,6 +33,9 @@
     private AuthenticationState? _authState;
     private string _loginMessage = string.Empty;
 
+    [Parameter]
+    public EventCallback OnUserLogin { get; set; }
+
     public string PasswordCriteria = "Passwords must have at least one non alphanumeric character, at least one digit ('0'-'9'), and at least one uppercase ('A'-'Z').";
 
     protected override async Task OnInitializedAsync()
@@ -45,9 +48,14 @@
         _isLoggedIn = await AuthStateProvider.LoginAsync(_email, _password);
 
         if (_isLoggedIn)
+        {
             _loginMessage = "Login successful";
+            await OnUserLogin.InvokeAsync();
+        }
         else
+        {
             _loginMessage = "Login failed";
+        }
 
         StateHasChanged();
     }

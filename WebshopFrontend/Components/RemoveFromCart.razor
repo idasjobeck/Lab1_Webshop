@@ -1,4 +1,5 @@
 ﻿@using System.Diagnostics
+@using System.Text.Json
 @using WebshopCore
 @using WebshopCore.Dtos
 @rendermode InteractiveServer
@@ -17,14 +18,31 @@
     [Parameter]
     public EventCallback OnRemoveFromCart { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        _cart = await GetItemsFromCartAsync();
-        StateHasChanged();
-    }
+    private WebshopUserDto? _loggedInUser;
 
-    private async Task<List<OrderItemDto>> GetItemsFromCartAsync() => 
-        await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+    private bool _userHasCart = false;
+
+    private async Task<List<OrderItemDto>> GetItemsFromCartAsync()
+    {
+        await GetUser();
+
+        //if user is logged in, check for cart in database
+        if (_loggedInUser != null)
+        {
+            using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+            var json = await client.GetStringAsync($"/cart/{_loggedInUser.Id}");
+
+            if (json == "null")
+                return await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+
+            var cartDto = JsonSerializer.Deserialize<CartDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _userHasCart = true;
+            return JsonSerializer.Deserialize<List<OrderItemDto>>(cartDto!.JsonCart, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<OrderItemDto>();
+        }
+
+        //else check for cart in session storage
+        return await SessionStorage.GetItemAsync<List<OrderItemDto>>("cart") ?? new List<OrderItemDto>();
+    }
 
     private async Task RemoveFromCartAsync(BookDto product)
     {
@@ -46,7 +64,36 @@
         await SessionStorage.SetItemAsync("cart", _cart);
 
         using var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
-        var response = await client.PatchAsync($"/increaseAvailableQty/{Product.Id}/{1}", null);
+        // If the user is logged in, update the cart in the database
+        if (_loggedInUser != null)
+        {
+            var cartDto = new CartDto
+            {
+                UserId = _loggedInUser.Id,
+                JsonCart = JsonSerializer.Serialize(_cart)
+            };
+
+            if (_userHasCart)
+                await client.PatchAsJsonAsync($"/cart/{_loggedInUser.Id}", cartDto);
+            else
+                await client.PostAsJsonAsync("/cart", cartDto);
+        }
+
+        await client.PatchAsync($"/increaseAvailableQty/{Product.Id}/{1}", null);
         await OnRemoveFromCart.InvokeAsync();
+    }
+
+    private async Task GetUser() //this will get the WebshopUserDto object of the user logged in
+    {
+        var client = HttpClientFactory.CreateClient("WebshopBackendAPI");
+
+        var response = await client.GetAsync("account/AuthenticatedUser");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var user = JsonSerializer.Deserialize<WebshopUserDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            _loggedInUser = user;
+        }
     }
 }
